@@ -7,17 +7,25 @@ import os
 from django.conf import settings
 
 # file_path = os.path.join(settings.BASE_DIR, "relative_path")
+import sys
 
-# file_path = os.path.join(
-#     settings.BASE_DIR, "Zeschroniska.pl/zeschroniska/shelters/scrapers/"
-# )
-from base_classes import Dog, Schronisko
+sys.path.append("/home/bsc-node/sol_exp/Zeschroniska.pl/zeschroniska")
+from shelters.scrapers.base_classes import Dog, Schronisko
 
 ### przygotowac osobną klasę dla kazdego schroniska, ktora dziedziiczy po klasie Schronisko
 
 
 class OtozSchroniskoZg(Schronisko):
-    def __init__(self, name, address, phone, email, website, link_dogs, link_cats):
+    def __init__(
+        self,
+        name="otozschroniskozg",
+        address="Zielona Góra",
+        phone="577 466 576",
+        email="zielonagora@otoz.pl",
+        website="http://otozschroniskozg.pl/",
+        link_dogs="http://otozschroniskozg.pl/psy-do-adopcji?jsf=jet-engine:all-dogs&pagenum=",
+        link_cats="http://otozschroniskozg.pl/koty-do-adopcji?jsf=jet-engine:all-cats&pagenum=",
+    ):
         Schronisko.__init__(
             self, name, address, phone, email, website, link_dogs, link_cats
         )
@@ -36,7 +44,7 @@ class OtozSchroniskoZg(Schronisko):
         return max_page_number
 
     def get_all_dogs_from_website(self):
-        dogs_list = []
+        dogs_list = set()
 
         for page in range(
             1, int(self.get_availables_pages_for_animal("dogs")) + 1
@@ -44,11 +52,11 @@ class OtozSchroniskoZg(Schronisko):
             soup = BeautifulSoup(self.get_dogs_content(str(page)), "lxml")
             dogs_listings = soup.find_all("a", "jet-listing-dynamic-link__link")
             for dog in dogs_listings:
-                dogs_list.append(dog.attrs["href"])
+                dogs_list.add(dog.attrs["href"])
         return dogs_list
 
-    def get_all_cats(self):
-        cats_list = []
+    def get_all_cats_from_website(self):
+        cats_list = set()
 
         for page in range(
             1, int(self.get_availables_pages_for_animal("cats")) + 1
@@ -56,7 +64,7 @@ class OtozSchroniskoZg(Schronisko):
             soup = BeautifulSoup(self.get_cats_content(str(page)), "lxml")
             cats_listings = soup.find_all("a", "jet-listing-dynamic-link__link")
             for cat in cats_listings:
-                cats_list.append(cat.attrs["href"])
+                cats_list.add(cat.attrs["href"])
         return cats_list
 
 
@@ -181,17 +189,12 @@ class DogOtoz(Dog):
         if details[3]:
             self.set_publication_date(details[3])
 
-
-if __name__ == "__main__":
-    schronisko = OtozSchroniskoZg(
-        "otozschroniskozg",
-        "Zielona Góra",
-        "577 466 576",
-        "zielonagora@otoz.pl",
-        "http://otozschroniskozg.pl/",
-        "http://otozschroniskozg.pl/psy-do-adopcji?jsf=jet-engine:all-dogs&pagenum=",
-        "http://otozschroniskozg.pl/koty-do-adopcji?jsf=jet-engine:all-cats&pagenum=",
-    )
+    # if __name__ == "__main__":
+    #     schronisko = OtozSchroniskoZg(
+    #         ,
+    #         ,
+    #
+    #     )
     # print(schronisko.get_all_dogs_from_website())
     # for dog in schronisko.get_all_dogs_from_website():
     #     dog = DogOtoz(dog, "pies", schronisko)
@@ -224,10 +227,10 @@ if __name__ == "__main__":
     # dogs_listings = soup.find_all("a", "jet-listing-dynamic-link__link")
     # for dog in dogs_listings:
     #     print(dog.attrs["href"])
-    toscik = DogOtoz("https://otozschroniskozg.pl/dogs/dumka", "dog", schronisko)
-    toscik.download_dog_link_content()
-    toscik.set_dog_details()
-    toscik.set_dog_pictures()
-    toscik.print_dog_details()
+    # toscik = DogOtoz("https://otozschroniskozg.pl/dogs/dumka", "dog", schronisko)
+    # toscik.download_dog_link_content()
+    # toscik.set_dog_details()
+    # toscik.set_dog_pictures()
+    # toscik.print_dog_details()
 
-    debug = 1
+    # debug = 1

@@ -27,6 +27,8 @@ class Animal(models.Model):
     animal_type = models.CharField(max_length=200)
     active = models.BooleanField(default=True)
     sterilized = models.CharField(max_length=200, default="Brak danych")
+    valid = models.BooleanField(default=True)
+    in_shelter_from = models.CharField(max_length=200, default="Brak danych")
 
     def first_picture(self):
         return self.pictures.split(",")[0]

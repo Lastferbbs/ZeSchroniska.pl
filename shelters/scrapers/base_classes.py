@@ -1,6 +1,7 @@
 import requests
 import os
 from django.conf import settings
+from .headers import headers
 
 # file_path = os.path.join(settings.BASE_DIR, "relative_path")
 
@@ -136,6 +137,7 @@ class Dog(
         age="Brak danych",
         sterilized="Brak danych",
         link_content=None,
+        in_shelter_from="Brak danych",
     ):
         Animal.__init__(self, link, animal_type, current_place)
         self.name = name
@@ -146,8 +148,9 @@ class Dog(
         self.age = age
         self.pictures = []
         self.link_content = link_content
-        self.publication_date = None
+        self.publication_date = "Brak danych"
         self.sterilized = sterilized
+        self.in_shelter_from = in_shelter_from
 
     def get_name(self):
         return self.name
@@ -182,6 +185,12 @@ class Dog(
     def get_publication_date(self):
         return self.publication_date
 
+    def get_sterilized(self):
+        return self.sterilized
+
+    def get_in_shelter_from(self):
+        return self.in_shelter_from
+
     def set_name(self, name):
         self.name = name
 
@@ -205,6 +214,9 @@ class Dog(
 
     def set_sterilized(self, sterilized):
         self.sterilized = sterilized
+
+    def set_in_shelter_from(self, in_shelter_from):
+        self.in_shelter_from = in_shelter_from
 
     def add_picture(self, picture):
         self.pictures.append(picture)

@@ -19,17 +19,17 @@ sys.path.append("/home/bsc-node/sol_exp/Zeschroniska.pl/zeschroniska")
 from shelters.scrapers.base_classes import Dog, Schronisko
 from shelters.scrapers.headers import headers
 
-
+# TODO - brak podstrony dla zwierzaka, jakoś to spróbować obejść
 class SchroniskoDG(Schronisko):
     def __init__(
         self,
-        name="schroniskodg",
-        address="Dłużyna Górna 1F, 59-930 Pieńsk",
-        phone="+48 (75) 778 04 12 ",
-        email="schroniskodluzyna@gmail.com",
-        website="https://schroniskodg.pl/",
-        link_dogs="https://schroniskodg.pl/zw-kat/psy-do-adopcji/page/",
-        link_cats="https://schroniskodg.pl/zw-kat/koty-do-adopcji/page/",
+        name="schronisko_amicus_glogow",
+        address="ul. Norwida 1, 67-200 Głogów",
+        phone="667-966-567",
+        email="amicus.glogow@wp.pl",
+        website="http://amicus.glogow.pl/",
+        link_dogs="http://amicus.glogow.pl/rehoming/dog-rehoming/page/",
+        link_cats="http://amicus.glogow.pl/rehoming/cat-rehoming/page/",
     ):
         Schronisko.__init__(
             self, name, address, phone, email, website, link_dogs, link_cats
@@ -50,8 +50,8 @@ class SchroniskoDG(Schronisko):
         if type_animal == "cats":
             soup = BeautifulSoup(self.get_cats_content("1"), "lxml")
 
-        available_pages = soup.find_all("a", "page-numbers")
-        max_page_number = available_pages[-2].text
+        available_pages = soup.find_all("a", "page")
+        max_page_number = available_pages[-1].text
         return max_page_number
 
     def get_all_dogs_from_website(self):
@@ -92,13 +92,12 @@ class DogDG(Dog):
 
     def set_dog_details(self):
         description_details_parameters_setter = {
-            "Data": self.set_publication_date,
+            "Data:": self.set_publication_date,
             "Orientacyjny wiek": self.set_age,  # TODO: normalize date format
             "Płeć": self.set_sex,
             "Rasa": self.set_breed,
             "Wielkość": self.set_size,
             "Kastracja/Sterylizacja": self.set_sterilized,
-            "Data przyjęcia": self.set_in_shelter_from,
         }
         soup = BeautifulSoup(self.link_content, "lxml")
         name = soup.find("h3", "cmsmasters_project_title entry-title").text
@@ -111,17 +110,15 @@ class DogDG(Dog):
             "div", "project_details_item"
         )  # get all dog's details
         for parameter in parameters:
-            param = parameter.contents[0].text.replace(":", "")
-            if (
-                param in description_details_parameters_setter
-            ):  # remove : from text, as it only appears sometimes
-
-                if param == "Data":  # taking last updated date which is on slot 1
-                    description_details_parameters_setter[param](
+            if parameter.contents[0].text in description_details_parameters_setter:
+                if (
+                    parameter.contents[0].text == "Data:"
+                ):  # taking last updated date which is on slot 1
+                    description_details_parameters_setter[parameter.contents[0].text](
                         parameter.contents[1].contents[1].text
                     )
                 else:  # taking other details which are on slot 0
-                    description_details_parameters_setter[param](
+                    description_details_parameters_setter[parameter.contents[0].text](
                         parameter.contents[1].contents[0].text
                     )
 
@@ -132,14 +129,6 @@ class DogDG(Dog):
             self.add_picture(picture.attrs["src"])
 
 
-# if __name__ == "__main__":
-#     shelter = SchroniskoDG()
-#     # print(shelter.get_availables_pages_for_animal("dogs"))
-#     # print(shelter.get_all_dogs_from_website())
-#     # for dog in shelter.get_all_dogs_from_website():
-#     dog = DogDG("https://schroniskodg.pl/zwierzak/gogus/", "pies", shelter)
-#     shelter.add_dog(dog)
-#     dog.download_dog_link_content()
-#     dog.set_dog_details()
-#     # dog.set_dog_pictures()
-#     dog.print_dog_details()
+shelter = SchroniskoDG()
+print(shelter.get_availables_pages_for_animal("dogs"))
+print(shelter.get_availables_pages_for_animal("cats"))
