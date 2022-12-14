@@ -168,7 +168,11 @@ class DogOtoz(Dog):
             self.set_description("Brak opisu")
 
         if "Płeć" in dict_details:
-            self.set_sex(dict_details["Płeć"])
+            if "samie" in dict_details["Płeć"]:
+                self.set_sex("pies")
+            elif "samic" in dict_details["Płeć"]:
+                self.set_sex("suka")
+
         else:
             self.set_sex("Brak informacji")
 

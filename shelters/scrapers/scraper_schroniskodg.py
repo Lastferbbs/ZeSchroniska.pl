@@ -3,7 +3,9 @@ import requests
 import json
 import re
 from datetime import datetime
+import locale
 
+locale.setlocale(locale.LC_TIME, "pl_PL.utf8")
 
 import os
 from django.conf import settings
@@ -98,7 +100,7 @@ class DogDG(Dog):
             "Rasa": self.set_breed,
             "Wielkość": self.set_size,
             "Kastracja/Sterylizacja": self.set_sterilized,
-            "Data przyjęcia": self.set_in_shelter_from,
+            "Data przyjęcia": self.set_publication_date,
         }
         soup = BeautifulSoup(self.link_content, "lxml")
         name = soup.find("h3", "cmsmasters_project_title entry-title").text
@@ -118,8 +120,15 @@ class DogDG(Dog):
 
                 if param == "Data":  # taking last updated date which is on slot 1
                     description_details_parameters_setter[param](
-                        parameter.contents[1].contents[1].text
+                        datetime.strptime(
+                            parameter.contents[1].contents[1].text, "%d %B %Y"
+                        ).date()
                     )
+                elif (
+                    param == "Rasa"
+                    and "miesz" in parameter.contents[1].contents[0].text
+                ):  # breed normalization
+                    description_details_parameters_setter[param]("mieszaniec")
                 else:  # taking other details which are on slot 0
                     description_details_parameters_setter[param](
                         parameter.contents[1].contents[0].text

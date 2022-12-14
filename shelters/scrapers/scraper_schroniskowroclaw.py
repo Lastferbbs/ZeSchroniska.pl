@@ -125,15 +125,19 @@ class DogWro(Dog):
         parameters = soup.find(
             "table", "table table-profile-description", "tr"
         )  # get all dog's details
-        self.set_in_shelter_from(parameters.contents[3].contents[3].text)
+        self.set_publication_date(
+            datetime.strptime(
+                parameters.contents[3].contents[3].text, "%Y-%m-%d"
+            ).date()
+        )
         if "duże" in parameters.contents[5].contents[3].text:
-            self.set_size("średnie")
+            self.set_size("średni")
         else:
-            self.set_size("małe")
-        if "Psy" in parameters.contents[5].contents[3].text:
-            self.set_sex("samiec")
+            self.set_size("mały")
+        if "Suczki" in parameters.contents[5].contents[3].text:
+            self.set_sex("suka")
         else:
-            self.set_sex("samica")
+            self.set_sex("pies")
 
     def set_dog_pictures(self):
         soup = BeautifulSoup(self.link_content, "lxml")

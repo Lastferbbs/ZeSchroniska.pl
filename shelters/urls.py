@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -7,6 +7,7 @@ urlpatterns = [
     path("home/", views.home, name="shelters/home"),
     path("all_items_test/", views.all_items_test, name="shelters/all_items_test"),
     path("dogs/", views.dogs, name="shelters/dogs"),
+    # re_path(r"^dogs/$", views.dogs, name="shelters/dogs"),
     path("dogs/<int:dog_id>/", views.dog, name="shelters/dog"),
     path("dogs_test/", views.dogs_test, name="shelters/dogs_test"),
 ]

@@ -4,23 +4,14 @@
 
 {% block content %}
 <section class="py-5 container">
-    <div class="row ">
-        <div class="col-lg-3 col-md-3 col-sm-1">
-            <h6>Wielkość</h6>
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8">
             <form method="get">
                 {{ filters.form.size }}
-
+                <button class="btn btn-sm btn-danger" type="submit">Submit</button>
             </form>
         </div>
-
-        <!-- <div class="col-lg-3 col-md-3 col-sm-1">
-            <h6>Wielkość</h6>
-            <form method="get">
-                {{ filters.form.size }}
-
-            </form> -->
     </div>
-
 </section>
 <div class="form-check form-check-inline">
     <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
@@ -28,27 +19,32 @@
 </div>
 <div class="container">
     <div class="row justify-content-center ">
-
         {% for dog in filters.qs %}
-        <div class="col-10 col-md-5 col-lg-3 pb-2 rounded-0">
-            <div class="card text-bg-dark">
-                <img src={{ dog.first_picture }} href="https://www.w3schools.com" class="card-img" alt="...">
+        <div class="col-10 col-md-5 col-lg-3 pb-2">
+            <div class="card text-center">
+                <!-- <div class="card-header">
+                    <h6 class="card-title">{{ dog.shelter.address }}, {{dog.publication_date}}</h6>
 
-                <a href=http://127.0.0.1:8000/dogs/{{dog.pk}}>
-                    <div class=" card-img-overlay">
+                </div> -->
+                <div class="card-top">
+                    <a href="{% url 'shelters/dogs' %}?sterylizacja=1"><img src={{ dog.first_picture }}
+                            alt="Ogłoszenie nieaktualne" class="card-img-top" id="imgUNcover"></a>
+                    <!-- </div>
+                <div class="card-footer rounded"> -->
+                    <a href=http://127.0.0.1:8000/dogs/{{dog.pk}} class="card-title">
+                        <h6 class="card-text">
+                            {{ dog.name }}
+                        </h6>
 
-                        <h3 class=" card-title align-self-end text-white strokeme">{{ dog.name }} - {{dog.sex}}</h3>
-
-                        <p class="card-text text-white align-self-end strokeme fs-4">{{dog.size}} /
-                            {{dog.age}}</p>
-
-                    </div>
-                </a>
-                <p class="card-text text-white bg-dark bg-gradient">Data publikacji: {{dog.publication_date}}</p>
+                    </a>
+                    <p class="card-text shadow rounded">{{dog.size}} /
+                        {{dog.sex}} / {{dog.age}}</p>
+                    <!-- <h6 class="card-title">{{ dog.shelter.address }}, {{dog.publication_date}}</h6> -->
+                </div>
             </div>
         </div>
         {% endfor %}
-        <!-- onclick="location.href='https://www.w3schools.com';" -->
+
 
 
     </div>

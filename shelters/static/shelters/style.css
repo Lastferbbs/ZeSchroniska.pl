@@ -1,8 +1,11 @@
 .card {
-    height: 400px;
+
+    height: 500px;
+
 }
 
 .card-top {
+    height: auto;
     flex: 1 0 90% !important;
     max-height: 90% !important;
     text-align: center;
@@ -12,7 +15,7 @@ img {
     /* display: block;
     border: none !important; */
     width: 80%;
-    /* height: 100%; */
+    height: 100%;
     /* object-position: 40% 25%; */
     object-fit: cover;
     /* padding: 0rem 0 !important; */
@@ -20,9 +23,19 @@ img {
 
 .card-body {
     flex: 1 0 10% !important;
-    /* max-height: calc(70% - 2rem) !important; */
+    max-height: calc(70% - 2rem) !important;
     /* margin: 1rem 0 !important; */
     padding: 0rem 1rem !important;
 
 
+}
+
+.strokeme {
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .12), 0 4px 8px rgba(0, 0, 0, .06);
 }

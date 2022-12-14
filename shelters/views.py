@@ -11,6 +11,7 @@ from django.core.paginator import (
     EmptyPage,
     PageNotAnInteger,
 )
+from .filters import AnimalFilter
 
 # Create your views here.
 
@@ -69,16 +70,22 @@ def dogs(request):
 
     # Get queryset of items to paginate
     default_page = 1
-    page = request.GET.get("page", default_page)
+
     all_dogs = Animal.objects.all()
-    paginator = Paginator(all_dogs, 12)
+    animal_filter = AnimalFilter(request.GET, queryset=all_dogs)
+    # sterylizacja = request.GET.get("sterylizacja")
+    # filters = ""
+    # if sterylizacja == "1":
+    #     filters += "&sterylizacja=" + sterylizacja
+    #     all_dogs = Animal.objects.filter(sex="samica")
+    paginator = Paginator(animal_filter.qs, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
     return render(
         request,
         "shelters/dogs.html",
-        {"dogs_json": page_obj},
+        {"dogs_json": all_dogs, "filters": animal_filter},
     )
 
 
