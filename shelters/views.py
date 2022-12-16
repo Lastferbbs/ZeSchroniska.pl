@@ -12,7 +12,15 @@ from django.core.paginator import (
     PageNotAnInteger,
 )
 from .filters import AnimalFilter
+from .api import API_KEY
 
+import requests
+
+SHELTERS_CITIES = [
+    "ul. Ślazowa 2, 51-007 Wrocław",
+    "Zielona Góra",
+    "Dłużyna Górna 1F, 59-930 Pieńsk",
+]
 # Create your views here.
 
 
@@ -69,23 +77,82 @@ def all_items_test(request):
 def dogs(request):
 
     # Get queryset of items to paginate
-    default_page = 1
+    current_filters_list = []
+    current_filters = request.build_absolute_uri().split(
+        "?"
+    )  # TODO simple way to get current filters from url, move to separate file, maybe merge with excluded_cities
+    if len(current_filters) > 1:
+        current_filters = current_filters[1].split("&")
+        for c_filter in current_filters:
+            if "page" not in c_filter and "excluded_cities" not in c_filter:
+                current_filters_list.append(c_filter)
+        current_filters = "&".join(current_filters_list)
+        if current_filters:
+            current_filters = "&" + current_filters
+    else:
+        current_filters = ""
 
     all_dogs = Animal.objects.all()
     animal_filter = AnimalFilter(request.GET, queryset=all_dogs)
+    distance = request.GET.get("distance")
+    city = request.GET.get("city")
+
+    query_set = animal_filter.qs
+    # print(animal_filter.qs)
+    if (  # TODO Move this to separate file, maybe merge with current_filters
+        distance and city
+    ):  # we could optimize this by memoizing the distance between cities
+        print(request.GET.get("excluded_cities"))
+        if request.GET.get("excluded_cities"):
+
+            # print(request.GET.get("excluded_cities").split("&"))
+            excluded_cities = request.GET.get("excluded_cities").split("|")
+            for excluded_city in excluded_cities:
+                if excluded_city:
+                    query_set = query_set.exclude(shelter__city=excluded_city)
+            excluded_cities = "&excluded_cities=" + "|".join(excluded_cities)
+        else:
+            excluded_cities = "&excluded_cities="
+            response = requests.get(
+                f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={city}&destinations={'|'.join(SHELTERS_CITIES)}&units=imperial&key={API_KEY}&language=pl"
+            )
+            response = response.json()
+            print(response)
+            for index, element in enumerate(response["rows"][0]["elements"]):
+                if element["status"] == "OK":
+                    # print((element["distance"]["value"], int(distance) * 1000))
+                    if (element["distance"]["value"]) > int(distance) * 1000:
+                        query_set = query_set.exclude(
+                            shelter__city=SHELTERS_CITIES[index]
+                        )
+                        excluded_cities += SHELTERS_CITIES[index] + "|"
+                        # print(query_set)
+    else:
+        excluded_cities = ""
+        # if int(distance) < 50:
+        #     query_set = animal_filter.qs.exclude(
+        #         shelter__city="Dłużyna Górna 1F, 59-930 Pieńsk"
+        #     )
+
     # sterylizacja = request.GET.get("sterylizacja")
     # filters = ""
     # if sterylizacja == "1":
     #     filters += "&sterylizacja=" + sterylizacja
     #     all_dogs = Animal.objects.filter(sex="samica")
-    paginator = Paginator(animal_filter.qs, 12)
+    paginator = Paginator(query_set, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    # print(excluded_cities)
 
     return render(
         request,
         "shelters/dogs.html",
-        {"dogs_json": all_dogs, "filters": animal_filter},
+        {
+            "dogs_json": page_obj,
+            "filters": animal_filter,
+            "current_filters": current_filters,
+            "excluded_cities": excluded_cities,
+        },
     )
 
 

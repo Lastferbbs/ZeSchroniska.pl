@@ -1,25 +1,53 @@
 {% extends 'shelters/base.html' %}
-
+{% load crispy_forms_tags %}
 
 
 {% block content %}
 <section class="py-5 container">
-    <div class="row ">
-        <div class="col-lg-3 col-md-3 col-sm-1">
-            <h6>Wielkość</h6>
-            <form method="get">
-                {{ filters.form.size }}
+    <form method="get">
+        <div class="row ">
+            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
+                {{filters.form.breed |as_crispy_field}}
+                {{filters.form.sex|as_crispy_field }}
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
+                {{filters.form.size|as_crispy_field }}
 
-            </form>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
+                {{filters.form.age }}
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
+                {{filters.form.sterilized|as_crispy_field}}
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
+                {{filters.form.city|as_crispy_field:"bootstrap5" }}
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
+                {{filters.form.distance|as_crispy_field}}
+            </div>
+
+
+            <button class="btn btn-sm btn-primary " type="submit">Submit</button>
         </div>
 
-        <!-- <div class="col-lg-3 col-md-3 col-sm-1">
-            <h6>Wielkość</h6>
-            <form method="get">
-                {{ filters.form.size }}
 
-            </form> -->
-    </div>
+    </form>
+    <!-- <div class="col-lg-3 col-md-3 col-sm-1">
+        <h6>Wielkość</h6>
+        <form method="get">
+            {{ filters.form.size_wykluczenie }}
+
+        </form>
+    </div> -->
+    <!-- <div class="col-lg-3 col-md-3 col-sm-1">
+        <h6>Wielkość</h6>
+        <form method="get">
+            {{ filters.form.breed }}
+
+        </form>
+    </div> -->
 
 </section>
 <div class="form-check form-check-inline">
@@ -29,8 +57,8 @@
 <div class="container">
     <div class="row justify-content-center ">
 
-        {% for dog in filters.qs %}
-        <div class="col-10 col-md-5 col-lg-3 pb-2 rounded-0">
+        {% for dog in dogs_json %}
+        <div class="col-10 col-md-5 col-lg-3 pb-4 rounded-0 px-2">
             <div class="card text-bg-dark">
                 <img src={{ dog.first_picture }} href="https://www.w3schools.com" class="card-img" alt="...">
 
@@ -59,7 +87,8 @@
     <ul class="pagination justify-content-center pt-3">
         {% if dogs_json.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ dogs_json.previous_page_number }}{{filters}}">Poprzednia</a>
+            <a class="page-link"
+                href="?page={{ dogs_json.previous_page_number }}{{ current_filters}}{{ excluded_cities}}">Poprzednia</a>
         </li>
         {% else %}
         <li class="page-item disabled">
@@ -68,7 +97,8 @@
         {% endif %}
 
         {% if dogs_json.number|add:'-4' > 1 %}
-        <li class="page-item"><a class="page-link" href="?page={{ dogs_json.number|add:'-5' }}{{filters}}">&hellip;</a>
+        <li class="page-item"><a class="page-link"
+                href="?page={{ dogs_json.number|add:'-5' }}{{ current_filters}}{{ excluded_cities}}">&hellip;</a>
         </li>
         {% endif %}
 
@@ -81,18 +111,20 @@
             </span>
         </li>
         {% elif i > dogs_json.number|add:'-5' and i < dogs_json.number|add:'5' %} <li class="page-item"><a
-                class="page-link" href="?page={{ i }}{{filters}}">{{ i }}</a></li>
+                class="page-link" href="?page={{ i }}{{ current_filters}}{{ excluded_cities}}">{{ i }}</a></li>
             {% endif %}
             {% endfor %}
 
             {% if dogs_json.paginator.num_pages > dogs_json.number|add:'4' %}
             <li class="page-item"><a class="page-link"
-                    href="?page={{ dogs_json.number|add:'5' }}{{filters}}">&hellip;</a></li>
+                    href="?page={{ dogs_json.number|add:'5' }}{{ current_filters}}{{ excluded_cities}}">&hellip;</a>
+            </li>
             {% endif %}
 
             {% if dogs_json.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ dogs_json.next_page_number }}{{filters}}">Następna</a>
+                <a class="page-link"
+                    href="?page={{ dogs_json.next_page_number }}{{ current_filters}}{{ excluded_cities}}">Następna</a>
             </li>
             {% else %}
             <li class="page-item disabled">
