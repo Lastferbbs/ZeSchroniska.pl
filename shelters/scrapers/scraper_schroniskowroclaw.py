@@ -25,6 +25,7 @@ class SchroniskoWro(Schronisko):
         self,
         name="schroniskowroclaw",
         address="ul. Ślazowa 2, 51-007 Wrocław",
+        city="Wrocław",
         phone="+48 71 362 56 74",
         email="schronisko.ola@gmail.com",
         website="https://www.schroniskowroclaw.pl/",
@@ -138,6 +139,7 @@ class DogWro(Dog):
             self.set_sex("suka")
         else:
             self.set_sex("pies")
+        self.set_age_in_months()
 
     def set_dog_pictures(self):
         soup = BeautifulSoup(self.link_content, "lxml")

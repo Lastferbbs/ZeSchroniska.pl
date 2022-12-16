@@ -17,6 +17,7 @@ class Shelter(models.Model):
 class Animal(models.Model):
     name = models.CharField(max_length=200)
     age = models.CharField(max_length=200)
+    age_in_months = models.FloatField(default=1000)
     sex = models.CharField(max_length=200)
     breed = models.CharField(max_length=200)
     description = models.CharField(max_length=5000)

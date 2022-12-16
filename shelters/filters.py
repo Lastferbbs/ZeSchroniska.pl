@@ -15,7 +15,7 @@ distance = [
 ]
 
 
-sterylizacja = [("tak", "Tak"), ("nie", "Nie")]
+sterylizacja = [("ak", "Tak"), ("nie", "Nie")]
 
 plec = [("pies", "Samiec"), ("suka", "Samica")]
 
@@ -66,6 +66,12 @@ class AnimalFilter(django_filters.FilterSet):
         field_name="shelter__city",
         choices=distance,
         exclude=True,
+    )
+
+    name = django_filters.CharFilter(
+        lookup_expr="icontains",
+        field_name="name",
+        label="Imię",
     )
 
     # TODO: Add age filter

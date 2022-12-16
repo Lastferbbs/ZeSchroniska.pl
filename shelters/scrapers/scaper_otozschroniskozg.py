@@ -19,7 +19,8 @@ class OtozSchroniskoZg(Schronisko):
     def __init__(
         self,
         name="otozschroniskozg",
-        address="Zielona Góra",
+        address="Szwajcarska 4, 65-169 Zielona Góra",
+        city="Zielona Góra",
         phone="577 466 576",
         email="zielonagora@otoz.pl",
         website="http://otozschroniskozg.pl/",
@@ -192,6 +193,7 @@ class DogOtoz(Dog):
             self.set_breed("Brak informacji")
         if details[3]:
             self.set_publication_date(details[3])
+        self.set_age_in_months()
 
     # if __name__ == "__main__":
     #     schronisko = OtozSchroniskoZg(

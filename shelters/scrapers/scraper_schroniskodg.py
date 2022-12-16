@@ -27,6 +27,7 @@ class SchroniskoDG(Schronisko):
         self,
         name="schroniskodg",
         address="Dłużyna Górna 1F, 59-930 Pieńsk",
+        city="Dłużyna Górna",
         phone="+48 (75) 778 04 12 ",
         email="schroniskodluzyna@gmail.com",
         website="https://schroniskodg.pl/",
@@ -133,6 +134,7 @@ class DogDG(Dog):
                     description_details_parameters_setter[param](
                         parameter.contents[1].contents[0].text
                     )
+        self.set_age_in_months()
 
     def set_dog_pictures(self):
         soup = BeautifulSoup(self.link_content, "lxml")

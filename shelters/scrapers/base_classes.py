@@ -12,7 +12,9 @@ from .headers import headers
 
 
 class Schronisko(object):
-    def __init__(self, name, address, phone, email, website, link_dogs, link_cats):
+    def __init__(
+        self, name, address, phone, email, website, link_dogs, link_cats, city
+    ):
         self.name = name
         self.address = address
         self.phone = phone
@@ -22,6 +24,7 @@ class Schronisko(object):
         self.link_cats = link_cats
         self.dogs = []
         self.cats = []
+        self.city = city
 
     def get_name(self):
         return self.name
@@ -51,6 +54,9 @@ class Schronisko(object):
 
     def get_cats(self):
         return self.cats
+
+    def get_city(self):
+        return self.city
 
     def add_dog(self, dog):
         self.dogs.append(dog)
@@ -135,6 +141,7 @@ class Dog(
         description="\n",
         size="Brak danych",
         age="Brak danych",
+        age_in_months="Brak danych",
         sterilized="Brak danych",
         link_content=None,
         in_shelter_from="Brak danych",
@@ -146,6 +153,7 @@ class Dog(
         self.description = description
         self.size = size
         self.age = age
+        self.age_in_months = age_in_months
         self.pictures = []
         self.link_content = link_content
         self.publication_date = "Brak danych"
@@ -217,6 +225,15 @@ class Dog(
 
     def set_in_shelter_from(self, in_shelter_from):
         self.in_shelter_from = in_shelter_from
+
+    def set_age_in_months(self):
+        age = self.age
+        if age == "Brak danych":
+            self.age_in_months = 1000
+        elif "rok" in age.lower() or "lat" in age.lower():
+            self.age_in_months = float(age.split(" ")[0].replace(",", ".")) * 12
+        else:
+            self.age_in_months = float(age.split(" ")[0])
 
     def add_picture(self, picture):
         self.pictures.append(picture)
