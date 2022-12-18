@@ -18,7 +18,7 @@ from django.conf import settings
 import sys
 
 sys.path.append("/home/bsc-node/sol_exp/Zeschroniska.pl/zeschroniska")
-from shelters.scrapers.base_classes import Dog, Schronisko
+from shelters.scrapers.base_classes import Animal, Schronisko
 from shelters.scrapers.headers import headers
 
 
@@ -35,7 +35,7 @@ class SchroniskoDG(Schronisko):
         link_cats="https://schroniskodg.pl/zw-kat/koty-do-adopcji/page/",
     ):
         Schronisko.__init__(
-            self, name, address, phone, email, website, link_dogs, link_cats
+            self, name, address, phone, email, website, link_dogs, link_cats, city
         )
 
     def get_dogs_content(self, page):
@@ -54,7 +54,10 @@ class SchroniskoDG(Schronisko):
             soup = BeautifulSoup(self.get_cats_content("1"), "lxml")
 
         available_pages = soup.find_all("a", "page-numbers")
-        max_page_number = available_pages[-2].text
+        try:
+            max_page_number = available_pages[-2].text
+        except IndexError:
+            max_page_number = 1
         return max_page_number
 
     def get_all_dogs_from_website(self):
@@ -80,28 +83,28 @@ class SchroniskoDG(Schronisko):
         return cats_list
 
 
-class DogDG(Dog):
+class AnimalDG(Animal):
     def __init__(
         self,
         link,
         animal_type,
         current_place,
     ):
-        Dog.__init__(self, link, animal_type, current_place)
+        Animal.__init__(self, link, animal_type, current_place)
 
-    def download_dog_link_content(self):
+    def download_animal_link_content(self):
         self.link_content = requests.get(self.link, headers=headers).content
         test = 1
 
-    def set_dog_details(self):
+    def set_animal_details(self):
         description_details_parameters_setter = {
             "Data": self.set_publication_date,
             "Orientacyjny wiek": self.set_age,  # TODO: normalize date format
             "Płeć": self.set_sex,
             "Rasa": self.set_breed,
             "Wielkość": self.set_size,
-            "Kastracja/Sterylizacja": self.set_sterilized,
-            "Data przyjęcia": self.set_publication_date,
+            "Kastracja/sterylizacja": self.set_sterilized,
+            "Data przyjęcia": self.set_in_shelter_from,
         }
         soup = BeautifulSoup(self.link_content, "lxml")
         name = soup.find("h3", "cmsmasters_project_title entry-title").text
@@ -120,37 +123,54 @@ class DogDG(Dog):
             ):  # remove : from text, as it only appears sometimes
 
                 if param == "Data":  # taking last updated date which is on slot 1
+
                     description_details_parameters_setter[param](
                         datetime.strptime(
                             parameter.contents[1].contents[1].text, "%d %B %Y"
-                        ).date()
+                        )
                     )
+
                 elif (
                     param == "Rasa"
                     and "miesz" in parameter.contents[1].contents[0].text
                 ):  # breed normalization
                     description_details_parameters_setter[param]("mieszaniec")
+                elif param == "Płeć":
+                    if (
+                        "kocur" in parameter.contents[1].contents[0].text
+                        or "pies" in parameter.contents[1].contents[0].text
+                    ):
+                        description_details_parameters_setter[param]("samiec")
+                    elif (
+                        "kotka" in parameter.contents[1].contents[0].text
+                        or "suka" in parameter.contents[1].contents[0].text
+                    ):
+                        description_details_parameters_setter[param]("samica")
                 else:  # taking other details which are on slot 0
                     description_details_parameters_setter[param](
                         parameter.contents[1].contents[0].text
                     )
         self.set_age_in_months()
 
-    def set_dog_pictures(self):
+    def set_animal_pictures(self):
         soup = BeautifulSoup(self.link_content, "lxml")
-        pictures = soup.find_all("img", "full-width")
+        pictures = soup.find("div", "project_content with_sidebar")
+        pictures = pictures.find_all("img")
         for picture in pictures:
-            self.add_picture(picture.attrs["src"])
+            if "ares" in picture.attrs["src"]:
+                self.add_picture(picture.attrs["src"])
 
 
 # if __name__ == "__main__":
-#     shelter = SchroniskoDG()
+
 #     # print(shelter.get_availables_pages_for_animal("dogs"))
 #     # print(shelter.get_all_dogs_from_website())
 #     # for dog in shelter.get_all_dogs_from_website():
-#     dog = DogDG("https://schroniskodg.pl/zwierzak/gogus/", "pies", shelter)
-#     shelter.add_dog(dog)
-#     dog.download_dog_link_content()
-#     dog.set_dog_details()
-#     # dog.set_dog_pictures()
-#     dog.print_dog_details()
+shelter = SchroniskoDG()
+dog = AnimalDG("https://schroniskodg.pl/zwierzak/misiu/", "pies", shelter)
+shelter.get_availables_pages_for_animal("cats")
+# shelter.add_dog(dog)
+# dog.download_animal_link_content()
+# dog.set_animal_details()
+# dog.set_animal_pictures()
+# dog.print_animal_details()

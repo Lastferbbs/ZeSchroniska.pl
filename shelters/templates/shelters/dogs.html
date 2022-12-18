@@ -3,83 +3,91 @@
 
 
 {% block content %}
-<section class="py-5 container">
-    <form method="get">
-        <div class="row ">
-            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
-                {{filters.form.breed |as_crispy_field}}
-                {{filters.form.sex|as_crispy_field }}
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
-                {{filters.form.size|as_crispy_field }}
-                {{filters.form.name|as_crispy_field}}
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
-                {{filters.form.age }}
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
-                {{filters.form.sterilized|as_crispy_field}}
-            </div>
+<section class="py-5 text-center container bg-light-gradient text-white">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light">Katalog z pieskami do adopcji</h1>
+            <p class="lead text-white">Strony udostępniają dane w różnych formatach - część z nich wszystkie parametry
+                umieszcza w opisie,
+                część w oddzielnych polach, część w ogóle nie udostępnia danych - dlatego mogą występować problemy z
+                filtrami i
+                sortowaniem</p>
 
-
-            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
-                {{filters.form.city|as_crispy_field:"bootstrap5" }}
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
-                {{filters.form.distance|as_crispy_field}}
-            </div>
-
-
-            <button class="btn btn-sm btn-primary " type="submit">Submit</button>
+            </p>
+            <p>
+                <button class="btn btn-primary justify-content-center" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Pokaż/schowaj filtry
+                </button>
+                <a class="btn btn-danger justify-content-center" href="/dogs">Zresetuj filtry</a>
+            </p>
         </div>
-
-
-    </form>
-    <!-- <div class="col-lg-3 col-md-3 col-sm-1">
-        <h6>Wielkość</h6>
-        <form method="get">
-            {{ filters.form.size_wykluczenie }}
-
-        </form>
-    </div> -->
-    <!-- <div class="col-lg-3 col-md-3 col-sm-1">
-        <h6>Wielkość</h6>
-        <form method="get">
-            {{ filters.form.breed }}
-
-        </form>
-    </div> -->
-
+    </div>
 </section>
-<div class="form-check form-check-inline">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-    <label class="form-check-label" for="inlineCheckbox2">2</label>
-</div>
-<div class="container">
-    <div class="row justify-content-center ">
 
-        {% for dog in dogs_json %}
-        <div class="col-10 col-md-5 col-lg-3 pb-4 rounded-0 px-2">
-            <div class="card text-bg-dark">
-                <img src={{ dog.first_picture }} href="https://www.w3schools.com" class="card-img" alt="...">
 
-                <a href=http://127.0.0.1:8000/dogs/{{dog.pk}}>
-                    <div class=" card-img-overlay">
+<div class="collapse" id="collapseExample">
 
-                        <h3 class=" card-title align-self-end text-white strokeme">{{ dog.name }} - {{dog.sex}}</h3>
+    <section class="py-5 container text-white">
+        <form method="get">
+            <div class="row border-primary p-3 rounded mx-auto">
+                {{filters.form.sorting|as_crispy_field}}
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    {{filters.form.size|as_crispy_field }}
+                    {{filters.form.breed |as_crispy_field}}
 
-                        <p class="card-text text-white align-self-end strokeme fs-4">{{dog.size}} /
-                            {{dog.age}}</p>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
 
-                    </div>
-                </a>
-                <p class="card-text text-white bg-dark bg-gradient">Data publikacji: {{dog.publication_date}}</p>
+                    {{filters.form.name|as_crispy_field}}
+                    {{filters.form.age|as_crispy_field}}
+
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    {{filters.form.sex|as_crispy_field }}
+                    {{filters.form.sterilized|as_crispy_field}}
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    {{filters.form.city|as_crispy_field:"bootstrap5" }}
+                    {{filters.form.distance|as_crispy_field}}
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
+
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6">
+                </div>
+                <button class="btn btn-sm btn-primary" type="submit">Zatwierdź filtry</button>
             </div>
+        </form>
+    </section>
+</div>
+<div class="album py-5" style="background-color: #212529">
+    <div class="container">
+        <div class="row justify-content-center ">
+
+            {% for dog in dogs_json %}
+            <div class="col-10 col-md-5 col-lg-3 pb-4 rounded border-primary px-2 ">
+                <div class="card text-bg-dark border-dark rounded">
+                    <img src={{ dog.first_picture }} href="https://www.w3schools.com" class="card-img" alt="...">
+
+                    <a href=http://127.0.0.1:8000/{{dog.animal_type}}s/{{dog.pk}}>
+                        <div class=" card-img-overlay">
+
+                            <h3 class=" card-title align-self-end text-white strokeme">{{ dog.name }} - {{dog.sex}}</h3>
+
+                            <p class="card-text text-white align-self-end strokeme fs-4">{{dog.size}} /
+                                {{dog.age}} - {{dogs.shelter}}</p>
+
+                        </div>
+                    </a>
+                    <p class="card-text text-white bg-dark bg-gradient">Data publikacji: {{dog.publication_date}}</p>
+                </div>
+            </div>
+            {% endfor %}
+
+
         </div>
-        {% endfor %}
-        <!-- onclick="location.href='https://www.w3schools.com';" -->
-
-
     </div>
 </div>
 

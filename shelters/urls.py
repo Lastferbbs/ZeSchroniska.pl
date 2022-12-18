@@ -1,13 +1,15 @@
 from django.urls import path, re_path
+from .views import HomePageView, AnimalDetailView
 
 from . import views
 
 urlpatterns = [
-    path("", views.index, name="shelters/index"),
-    path("home/", views.home, name="shelters/home"),
-    path("all_items_test/", views.all_items_test, name="shelters/all_items_test"),
+    path("", HomePageView.as_view()),
+    path("home/", HomePageView.as_view()),
     path("dogs/", views.dogs, name="shelters/dogs"),
     # re_path(r"^dogs/$", views.dogs, name="shelters/dogs"),
-    path("dogs/<int:dog_id>/", views.dog, name="shelters/dog"),
-    path("dogs_test/", views.dogs_test, name="shelters/dogs_test"),
+    path("animal/<int:pk>/", AnimalDetailView.as_view()),
+    path("dogs/<int:pk>/", AnimalDetailView.as_view()),
+    path("cats/", views.cats, name="shelters/cats"),
+    path("cats/<int:pk>/", AnimalDetailView.as_view()),
 ]

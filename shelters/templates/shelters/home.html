@@ -1,82 +1,28 @@
 {% extends 'shelters/base.html' %}
-
-
-
 {% block content %}
 
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12 col-md-12 col-lg-12  text-white rounded" style="
-        background-image: url('/static/shelters/pexels-kat-smith-551628.jpg');
-        height: 100vh;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: 50% 45%;
-      ">
-
-            <h1>Witaj na stronie Zeschroniska.pl!</h1>
-            <h2>Przygarnij zwierzaka!</h2>
-            <p style="position: relative; bottom: 0;">Na tej stronie znajdziesz informacje o zwierzętach do adopcji,
-                w okolicy Wrocławia, Opola i Zielonej
-                Góry! </p>
-            <p style="position: relative; bottom: 0;">Na tej stronie znajdziesz informacje o zwierzętach do adopcji,
-                w okolicy Wrocławia, Opola i Zielonej
-                Góry! </p>
-
-
-            <div class="container-fluid">
-                <div class="row ">
-                    <div class="col-12 col-md-12 col-lg-12 my-0 mx-0 py-0 px-0 text rounded " style="height: 3vh;">
-
-                        <p class="fs-4 text-center float"> Najnowsze </p>
-
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="row justify-content-center ">
-                    <div class="col">
-
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="row justify-content-center ">
-                    {% for dog in dogs_json %}
-                    <div class=" col-12 col-md-5 col-lg-2 pb-2 mt-1 px-1 align-self-end">
-                        <div class="card text-center border-primary">
-                            <div class="card-header">
-                                <h6 class="card-title">{{ dog.shelter.address }}, {{dog.publication_date}}</h5>
-
-                            </div>
-                            <div class="card-top">
-                                <a href={{ dog.first_picture}}><img src={{ dog.first_picture }}
-                                        alt="Ogłoszenie nieaktualne" class="card-img-top" id="imgUNcover"></a>
-                            </div>
-                            <div class="card-footer">
-                                <a href=http://127.0.0.1:8000/dogs/{{dog.pk}} class="card-title">
-                                    <h6 class="card-text">
-                                        {{ dog.name }}
-                                    </h6>
-
-                                </a>
-                                <p class="card-text shadow">{{dog.size}} / {{dog.sex}} / {{dog.age}}</p>
-
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-
-                </div>
+<div class="container col-xxl-8 px-4 py-5">
+    <div class="row flex-lg-row-reverse align-items-center ">
+        <div class="col-10 col-sm-8 col-lg-6 rounded">
+            <img src="/static/shelters/third.webp" class="d-block mx-lg-auto img-fluid rounded" alt="Bootstrap Themes"
+                width="700" height="600" loading="lazy">
+        </div>
+        <div class="col-lg-6 g-5 py-5 text-white">
+            <h1 class="display-5 fw-bold lh-1 mb-3 ">Zeschroniska.pl - przygarnij zwierzaka</h1>
+            <p class="lead">Zeschroniska.pl to miejsce, które gromadzi ogłoszenia o adopcji zwierząt z całej Polski,
+                pozwala
+                je sortować oraz filtrować na wiele róznych sposób, m.in. po odległości od podanej lokalizacji.
+                Sprawdzanie aktualności ogłoszeń i
+                dodawanie nowych odbywa się 2 razy
+                dziennie.
+                Lista schronisk, z których pochodzą ogłoszenia jest w zakładce "Schroniska".
+            </p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a type="button" href="/dogs" class="btn btn-primary btn-lg px-4 me-md-2">Przeglądaj psy</a>
+                <a type="button" href="/cats" class="btn btn-success btn-lg px-4 me-md-2">Przeglądaj Koty</a>
             </div>
         </div>
     </div>
 </div>
-</div>
-
-
-
 
 {% endblock %}
-<!-- https://otozschroniskozg.pl/wp-content/uploads/2021/01/DSC00383-scaled.jpg -->

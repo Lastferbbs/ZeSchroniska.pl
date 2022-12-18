@@ -10,7 +10,7 @@ from django.conf import settings
 import sys
 
 sys.path.append("/home/bsc-node/sol_exp/Zeschroniska.pl/zeschroniska")
-from shelters.scrapers.base_classes import Dog, Schronisko
+from shelters.scrapers.base_classes import Schronisko, Animal
 
 ### przygotowac osobną klasę dla kazdego schroniska, ktora dziedziiczy po klasie Schronisko
 
@@ -28,7 +28,7 @@ class OtozSchroniskoZg(Schronisko):
         link_cats="http://otozschroniskozg.pl/koty-do-adopcji?jsf=jet-engine:all-cats&pagenum=",
     ):
         Schronisko.__init__(
-            self, name, address, phone, email, website, link_dogs, link_cats
+            self, name, address, phone, email, website, link_dogs, link_cats, city
         )
 
     def get_availables_pages_for_animal(self, type_animal):
@@ -69,24 +69,24 @@ class OtozSchroniskoZg(Schronisko):
         return cats_list
 
 
-class DogOtoz(Dog):
+class AnimalOtoz(Animal):
     def __init__(
         self,
         link,
         animal_type,
         current_place,
     ):
-        Dog.__init__(self, link, animal_type, current_place)
+        Animal.__init__(self, link, animal_type, current_place)
 
-    def download_dog_link_content(self):
+    def download_animal_link_content(self):
         self.link_content = requests.get(self.link, verify=False).content
 
-    def set_dog_pictures(self):
-        pictures = self.parse_dog_details()[2]
+    def set_animal_pictures(self):
+        pictures = self.parse_animal_details()[2]
         for picture in pictures:
             self.add_picture(picture["src"])
 
-    def parse_dog_details(self):
+    def parse_animal_details(self):
         soup = BeautifulSoup(self.link_content, "lxml")
         parameter = soup.find_all(
             "div", "jet-listing-dynamic-field__content"
@@ -140,10 +140,10 @@ class DogOtoz(Dog):
             ).date()
         return publication_date
 
-    def set_dog_details(
+    def set_animal_details(
         self,
     ):  # wziac podstawowe parametry i przypisac im default value
-        details = self.parse_dog_details()
+        details = self.parse_animal_details()
         dict_details = {
             "Imie": details[0][0].text,
             "Opis": details[0][1].text,  # find description
@@ -170,9 +170,9 @@ class DogOtoz(Dog):
 
         if "Płeć" in dict_details:
             if "samie" in dict_details["Płeć"]:
-                self.set_sex("pies")
+                self.set_sex("samiec")
             elif "samic" in dict_details["Płeć"]:
-                self.set_sex("suka")
+                self.set_sex("samica")
 
         else:
             self.set_sex("Brak informacji")
@@ -195,48 +195,50 @@ class DogOtoz(Dog):
             self.set_publication_date(details[3])
         self.set_age_in_months()
 
-    # if __name__ == "__main__":
-    #     schronisko = OtozSchroniskoZg(
-    #         ,
-    #         ,
-    #
-    #     )
-    # print(schronisko.get_all_dogs_from_website())
-    # for dog in schronisko.get_all_dogs_from_website():
-    #     dog = DogOtoz(dog, "pies", schronisko)
-    #     schronisko.add_dog(dog)
-    #     dog.download_dog_link_content()
-    #     dog.set_dog_details()
-    #     dog.set_dog_pictures()
-    #     dog.print_dog_details()
 
-    # for element in schronisko.get_dog_details("http://otozschroniskozg.pl/dogs/gryz")[
-    #     1
-    # ]:
-    #     print(element.text)
+# if __name__ == "__main__":
 
-    # soup = BeautifulSoup(schronisko.get_cats_content("1"), "lxml")
-    # available_pages = soup.find_all("script", id="jet-smart-filters-js-extra")
-    # max_page_number = re.findall("max_num_pages.*?,", str(available_pages))[0][
-    #     :-1
-    # ].split(":")[
-    #     1
-    # ]  # get max number of pages
-    # # page_number = available_pages[-1].attrs["data-value"]
+#     #         ,
+#     #         ,
+#     #
+# )
+# print(schronisko.get_all_dogs_from_website())
+# for dog in schronisko.get_all_dogs_from_website():
+#     dog = DogOtoz(dog, "pies", schronisko)
+#     schronisko.add_dog(dog)
+#     dog.download_dog_link_content()
+#     dog.set_dog_details()
+#     dog.set_dog_pictures()
+#     dog.print_dog_details()
 
-    # for page in range(1, int(max_page_number) + 1):  # iterate over all pages
-    #     soup = BeautifulSoup(schronisko.get_cats_content(str(page)), "lxml")
-    #     dogs_listings = soup.find_all("a", "jet-listing-dynamic-link__link")
-    #     for dog in dogs_listings:
-    #         print(dog.attrs["href"])
+# for element in schronisko.get_dog_details("http://otozschroniskozg.pl/dogs/gryz")[
+#     1
+# ]:
+#     print(element.text)
 
-    # dogs_listings = soup.find_all("a", "jet-listing-dynamic-link__link")
-    # for dog in dogs_listings:
-    #     print(dog.attrs["href"])
-    # toscik = DogOtoz("https://otozschroniskozg.pl/dogs/dumka", "dog", schronisko)
-    # toscik.download_dog_link_content()
-    # toscik.set_dog_details()
-    # toscik.set_dog_pictures()
-    # toscik.print_dog_details()
+# soup = BeautifulSoup(schronisko.get_cats_content("1"), "lxml")
+# available_pages = soup.find_all("script", id="jet-smart-filters-js-extra")
+# max_page_number = re.findall("max_num_pages.*?,", str(available_pages))[0][
+#     :-1
+# ].split(":")[
+#     1
+# ]  # get max number of pages
+# # page_number = available_pages[-1].attrs["data-value"]
 
-    # debug = 1
+# for page in range(1, int(max_page_number) + 1):  # iterate over all pages
+#     soup = BeautifulSoup(schronisko.get_cats_content(str(page)), "lxml")
+#     dogs_listings = soup.find_all("a", "jet-listing-dynamic-link__link")
+#     for dog in dogs_listings:
+#         print(dog.attrs["href"])
+
+# dogs_listings = soup.find_all("a", "jet-listing-dynamic-link__link")
+# for dog in dogs_listings:
+#     print(dog.attrs["href"])
+# schronisko = OtozSchroniskoZg()
+# toscik = AnimalOtoz("https://otozschroniskozg.pl/cats/ynia", "dog", schronisko)
+# toscik.download_animal_link_content()
+# toscik.set_animal_details()
+# toscik.set_animal_pictures()
+# toscik.print_animal_details()
+
+# debug = 1

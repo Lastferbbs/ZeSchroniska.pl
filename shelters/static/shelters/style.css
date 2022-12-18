@@ -39,3 +39,17 @@ img {
     transform: scale(1.1);
     box-shadow: 0 10px 20px rgba(0, 0, 0, .12), 0 4px 8px rgba(0, 0, 0, .06);
 }
+
+
+body {
+    min-height: 100vh;
+    margin: 0;
+
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+footer {
+    min-height: 50px;
+    background: PapayaWhip;
+}

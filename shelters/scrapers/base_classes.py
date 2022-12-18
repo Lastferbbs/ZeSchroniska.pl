@@ -2,6 +2,7 @@ import requests
 import os
 from django.conf import settings
 from .headers import headers
+import datetime
 
 # file_path = os.path.join(settings.BASE_DIR, "relative_path")
 
@@ -120,16 +121,7 @@ class Schronisko(object):
         return self.name
 
 
-class Animal:
-    def __init__(self, link, animal_type, current_place):
-        self.link = link
-        self.animal_type = animal_type
-        self.current_place = current_place
-
-
-class Dog(
-    Animal
-):  # dodac klase Dog z konkretnego schroniska, ktora dziedziczy po klasie Dog
+class Animal:  # dodac klase Dog z konkretnego schroniska, ktora dziedziczy po klasie Dog
     def __init__(
         self,
         link,
@@ -145,8 +137,11 @@ class Dog(
         sterilized="Brak danych",
         link_content=None,
         in_shelter_from="Brak danych",
+        publication_date="Brak danych",
     ):
-        Animal.__init__(self, link, animal_type, current_place)
+        self.link = link
+        self.animal_type = animal_type
+        self.current_place = current_place
         self.name = name
         self.sex = sex
         self.breed = breed
@@ -156,7 +151,7 @@ class Dog(
         self.age_in_months = age_in_months
         self.pictures = []
         self.link_content = link_content
-        self.publication_date = "Brak danych"
+        self.publication_date = publication_date
         self.sterilized = sterilized
         self.in_shelter_from = in_shelter_from
 
@@ -177,6 +172,9 @@ class Dog(
 
     def get_age(self):
         return self.age
+
+    def get_age_in_months(self):
+        return self.age_in_months
 
     def get_pictures(self):
         return self.pictures
@@ -218,17 +216,19 @@ class Dog(
         self.breed = breed
 
     def set_publication_date(self, publication_date):
+        publication_date = publication_date.strftime("%Y-%m-%d")
         self.publication_date = publication_date
 
     def set_sterilized(self, sterilized):
         self.sterilized = sterilized
 
     def set_in_shelter_from(self, in_shelter_from):
+        # in_shelter_from = in_shelter_from.strftime("%Y-%m-%d")
         self.in_shelter_from = in_shelter_from
 
     def set_age_in_months(self):
         age = self.age
-        if age == "Brak danych":
+        if "brak" in age.lower():
             self.age_in_months = 1000
         elif "rok" in age.lower() or "lat" in age.lower():
             self.age_in_months = float(age.split(" ")[0].replace(",", ".")) * 12
@@ -238,7 +238,7 @@ class Dog(
     def add_picture(self, picture):
         self.pictures.append(picture)
 
-    def print_dog_details(self):
+    def print_animal_details(self):
         print("Imię: " + self.name)
         print("Płeć: " + self.sex)
         print("Wielkość: " + self.size)
@@ -249,8 +249,9 @@ class Dog(
         print("Zdjęcia: " + str(self.pictures))
         print("Schronisko: " + self.current_place.name)
         print("Data publikacji: ", self.publication_date)
+        print("Wysterilizowany: ", self.sterilized)
 
-    def get_dog_details(self):
+    def get_animal_details(self):
         return (
             self.name,
             self.sex,

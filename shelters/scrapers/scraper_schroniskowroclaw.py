@@ -16,7 +16,7 @@ from django.conf import settings
 import sys
 
 sys.path.append("/home/bsc-node/sol_exp/Zeschroniska.pl/zeschroniska")
-from shelters.scrapers.base_classes import Dog, Schronisko
+from shelters.scrapers.base_classes import Animal, Schronisko
 from shelters.scrapers.headers import headers
 
 # TODO - brak podstrony dla zwierzaka, jakoś to spróbować obejść
@@ -36,7 +36,7 @@ class SchroniskoWro(Schronisko):
         link_cats="https://www.schroniskowroclaw.pl/adopcja/koty-c9?page=",
     ):
         Schronisko.__init__(
-            self, name, address, phone, email, website, link_dogs, link_cats
+            self, name, address, phone, email, website, link_dogs, link_cats, city
         )
 
     def get_female_content(self, page):
@@ -96,20 +96,20 @@ class SchroniskoWro(Schronisko):
         return cats_list
 
 
-class DogWro(Dog):
+class AnimalWro(Animal):
     def __init__(
         self,
         link,
         animal_type,
         current_place,
     ):
-        Dog.__init__(self, link, animal_type, current_place)
+        Animal.__init__(self, link, animal_type, current_place)
 
-    def download_dog_link_content(self):
+    def download_animal_link_content(self):
         self.link_content = requests.get(self.link, headers=headers).content
         test = 1
 
-    def set_dog_details(self):
+    def set_animal_details(self):
 
         soup = BeautifulSoup(self.link_content, "lxml")
         name = soup.find("h3", "h-serif-flex").text
@@ -126,36 +126,38 @@ class DogWro(Dog):
         parameters = soup.find(
             "table", "table table-profile-description", "tr"
         )  # get all dog's details
-        self.set_publication_date(
-            datetime.strptime(
-                parameters.contents[3].contents[3].text, "%Y-%m-%d"
-            ).date()
-        )
+        date = datetime.strptime(
+            parameters.contents[3].contents[3].text, "%Y-%m-%d"
+        ).date()
+        self.set_publication_date(date)
+        self.set_in_shelter_from(date)
         if "duże" in parameters.contents[5].contents[3].text:
             self.set_size("średni")
         else:
             self.set_size("mały")
         if "Suczki" in parameters.contents[5].contents[3].text:
-            self.set_sex("suka")
+            self.set_sex("samica")
+        elif "Psy" in parameters.contents[5].contents[3].text:
+            self.set_sex("samiec")
         else:
-            self.set_sex("pies")
+            self.set_sex("Brak danych")
         self.set_age_in_months()
 
-    def set_dog_pictures(self):
+    def set_animal_pictures(self):
         soup = BeautifulSoup(self.link_content, "lxml")
         pictures = soup.find("a", "thumbnail")
         self.add_picture(pictures.attrs["href"])
 
 
+# # # print(shelter.get_availables_pages_for_animal("dogs"))
+# # # print(shelter.get_availables_pages_for_animal("cats"))
+# # # print(shelter.get_all_dogs_from_website())
+# # # print(shelter.get_all_cats_from_website())
 # shelter = SchroniskoWro()
-# # print(shelter.get_availables_pages_for_animal("dogs"))
-# # print(shelter.get_availables_pages_for_animal("cats"))
-# # print(shelter.get_all_dogs_from_website())
-# # print(shelter.get_all_cats_from_website())
-# psiak = DogWro(
-#     "https://www.schroniskowroclaw.pl/adoptuj/gonzo-i1583", "pies", SchroniskoWro()
+# psiak = AnimalWro(
+#     "https://www.schroniskowroclaw.pl/adoptuj/karol-i2058", "pies", SchroniskoWro()
 # )
-# psiak.download_dog_link_content()
-# psiak.set_dog_details()
-# psiak.set_dog_pictures()
-# psiak.print_dog_details()
+# psiak.download_animal_link_content()
+# psiak.set_animal_details()
+# psiak.set_animal_pictures()
+# psiak.print_animal_details()

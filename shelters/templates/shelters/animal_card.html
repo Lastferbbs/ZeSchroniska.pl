@@ -1,0 +1,35 @@
+{% extends 'shelters/base.html' %}
+
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center text-white">
+        <div class="col-12 col-md-12 col-lg-6 mb-4 mt-5  justify-content-center" style="max-width: 90%;">
+            <img src={{animal.first_picture}} class="rounded " alt="...">
+        </div>
+        <div class="col-12 col-md-12 col-lg-6 mb-4 mt-5">
+            <h1 class="fs-1" style="text-align:left">{{animal.name}} </h1>
+            <h2 class="fs-2" style="text-align:left">Opis </h2>
+            <p class="fs-5" style="text-align:left; overflow: auto;">{{animal.description}} </p>
+            <h1 class="fs-1" style="text-align:left"></h1>
+            <h2 class="fs-2" style="text-align:left">Informacje </h2>
+            <p class="fs-5" style="text-align:left; padding-left: 5%;">Wiek: {{animal.age}} </p>
+            <p class="fs-5" style="text-align:left; padding-left: 5%;">Płeć: {{animal.sex}} </p>
+            <p class="fs-5" style="text-align:left; padding-left: 5%;">Rasa: {{animal.breed}} </p>
+            <p class="fs-5" style="text-align:left; padding-left: 5%;">Wielkość: {{animal.size}} </p>
+            <p class="fs-5" style="text-align:left; padding-left: 5%;">Wysterlizowany: {{animal.sterilized}} </p>
+            <p class="fs-5" style="text-align:left; padding-left: 5%;">Wiek w miesiącach: {{animal.age_in_months}} </p>
+            <p class="fs-5" style="text-align:left; padding-left: 5%;">Data opublikowania: {{animal.publication_date}}
+            </p>
+            <p class="fs-5" style="text-align:left; padding-left: 5%;">Data dodania na naszej stronie:
+                {{animal.shelter.city}} </p>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
