@@ -1,0 +1,79 @@
+{% extends 'shelters/base.html' %}
+{% block content %}
+
+<div class="mt-md-5">
+    <div class="container">
+        <div class="row text-white">
+            <div class="col-sm ">
+                <h3 align="center">Welcome to PythonGuides</h3>
+                <br>
+                <hr>
+                <p> PythonGuides is Website Builder who offers 5000+ website blocks that includes articles,
+                    online shops, gallaeries, articles, blog posts, chat buttons, google maps, social feeds, etc.
+                    The newest web design trends are taken into account when creating blocks, which are adaptable
+                    and loaded with customization choices. </p>
+                <br> <br>
+                <p> PythonGuides is best for non-techies who are not familiar with the complexities of web design
+                    and prefer to join a non-code revolution. And also benifical for pro-devs and web agencies for
+                    fast prototyping and small customer's projects. </p>
+                <br><br>
+                <p> PythonGuides is premium website to easily build small/large websites, templates, themes and
+                    pages.</p>
+            </div>
+            <div class="vl">
+            </div>
+            <div class="col-sm">
+                <h3 align="center">HOW CAN WE HELP?</h3>
+                <br>
+                <hr>
+                <br>
+                <form method="POST" class="post-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="name">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder=" Your Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="organization">Organization:</label>
+                            <input type="text" class="form-control" id="organization" name="organization"
+                                placeholder="Your Organization">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                            placeholder="Your Email Address">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Project Description:</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="budget">Budget:</label>
+                            <select id="budget" name='budget' class="form-control">
+                                <option selected>Choose</option>
+                                <option value="1">45000</option>
+                                <option value="2">30000</option>
+                                <option value="3">20000</option>
+                                <option value="4">15000</option>
+                                <option value="5">10000</option>
+                            </select>
+                        </div>
+                        <div id="date" class="md-form md-outline input-with-post-icon datepicker" inline="true">
+                            <label for="date">Delivery Date:</label>
+                            <input placeholder="Select date" type="date" id="date" name="date" class="form-control">
+
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

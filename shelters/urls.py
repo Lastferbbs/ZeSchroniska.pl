@@ -12,4 +12,5 @@ urlpatterns = [
     path("dogs/<int:pk>/", AnimalDetailView.as_view()),
     path("cats/", views.cats, name="shelters/cats"),
     path("cats/<int:pk>/", AnimalDetailView.as_view()),
+    path("contact/", views.ContactPageView.as_view()),
 ]

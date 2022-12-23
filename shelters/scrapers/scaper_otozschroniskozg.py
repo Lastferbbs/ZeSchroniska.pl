@@ -1,13 +1,9 @@
-from bs4 import BeautifulSoup
-import requests
 import json
 import re
-from datetime import datetime
-import os
-from django.conf import settings
-
-# file_path = os.path.join(settings.BASE_DIR, "relative_path")
 import sys
+from datetime import datetime
+from bs4 import BeautifulSoup
+import requests
 
 sys.path.append("/home/bsc-node/sol_exp/Zeschroniska.pl/zeschroniska")
 from shelters.scrapers.base_classes import Schronisko, Animal
@@ -16,6 +12,13 @@ from shelters.scrapers.base_classes import Schronisko, Animal
 
 
 class OtozSchroniskoZg(Schronisko):
+    """
+    A class used to represent OtozSchroniskoZg shelter
+
+    Args:
+        Schronisko (class):  Base class for shelters
+    """
+
     def __init__(
         self,
         name="otozschroniskozg",
@@ -27,11 +30,33 @@ class OtozSchroniskoZg(Schronisko):
         link_dogs="http://otozschroniskozg.pl/psy-do-adopcji?jsf=jet-engine:all-dogs&pagenum=",
         link_cats="http://otozschroniskozg.pl/koty-do-adopcji?jsf=jet-engine:all-cats&pagenum=",
     ):
+        """
+        Constructor for OtozSchroniskoZg class with standard values
+
+        Args:
+            name (str, optional): Shelter's name. Defaults to "otozschroniskozg".
+            address (str, optional): Shelter's address. Defaults to "Szwajcarska 4, 65-169 Zielona Góra".
+            city (str, optional): Shelter's city. Defaults to "Zielona Góra".
+            phone (str, optional): Shelter's phone number. Defaults to "577 466 576".
+            email (str, optional): Shelter's email. Defaults to "zielonagora@otoz.pl".
+            website (str, optional): Shelter's website. Defaults to "http://otozschroniskozg.pl/".
+            link_dogs (str, optional): Link to dogs listings on shelter website. Defaults to "http://otozschroniskozg.pl/psy-do-adopcji?jsf=jet-engine:all-dogs&pagenum=".
+            link_cats (str, optional):Link to cats listings on shelter website Defaults to "http://otozschroniskozg.pl/koty-do-adopcji?jsf=jet-engine:all-cats&pagenum=".
+        """
         Schronisko.__init__(
             self, name, address, phone, email, website, link_dogs, link_cats, city
         )
 
     def get_availables_pages_for_animal(self, type_animal):
+        """
+        Returns number of available pages for given animal type
+
+        Args:
+            type_animal (string): Animal type, can be "dogs" or "cats"
+
+        Returns:
+            string: max number of pages on scraped website
+        """
         if type_animal == "dogs":
             soup = BeautifulSoup(self.get_dogs_content("1"), "lxml")
 
@@ -45,6 +70,12 @@ class OtozSchroniskoZg(Schronisko):
         return max_page_number
 
     def get_all_dogs_from_website(self):
+        """
+        Returns list of all dogs from website, in form of links
+
+        Returns:
+            set: set of links to all dogs
+        """
         dogs_list = set()
 
         for page in range(
@@ -56,7 +87,14 @@ class OtozSchroniskoZg(Schronisko):
                 dogs_list.add(dog.attrs["href"])
         return dogs_list
 
+    # TODO: refactor this method, it is the same as get_all_dogs_from_website
     def get_all_cats_from_website(self):
+        """
+        Returns list of all cats from website, in form of links
+
+        Returns:
+            set: set of links to all cats
+        """
         cats_list = set()
 
         for page in range(
@@ -70,23 +108,115 @@ class OtozSchroniskoZg(Schronisko):
 
 
 class AnimalOtoz(Animal):
+    """
+    A class used to represent Otoz animal
+
+    Args:
+        Animal (class): Base class for animals
+
+    Attributes:
+        link (string): link to animal's listing
+        animal_type (string): dog or cat
+        current_place (object): Shelter object, where animal is located
+
+    """
+
     def __init__(
         self,
         link,
         animal_type,
         current_place,
     ):
+        """
+        Constructor for AnimalOtoz class
+
+        Args:
+            link (string): link to animal's listing
+            animal_type (string): dog or cat
+            current_place (object): Shelter object, where animal is located
+        """
         Animal.__init__(self, link, animal_type, current_place)
 
     def download_animal_link_content(self):
+        """
+        Downloads content of animal's link and saves it to self.link_content
+        """
         self.link_content = requests.get(self.link, verify=False).content
 
     def set_animal_pictures(self):
+        """
+        Sets animal's pictures
+        """
         pictures = self.parse_animal_details()[2]
         for picture in pictures:
             self.add_picture(picture["src"])
 
+    def find_description_place(self, list_of_site_elements):
+        """
+        Finds place of description in list of site elements,
+        if virtual patron is in description, 1 is returned,
+        if not, place of description is returned
+
+        Args:
+            list_of_site_elements (list): list of site elements
+
+        Returns:
+            int: place of description in list of site elements or 1, if virtual patron is in description
+        """
+        for i, element in enumerate(list_of_site_elements):
+            if element.text == "Opis":
+                soup = BeautifulSoup(self.link_content, "lxml")
+                virtual_patron = (
+                    soup.find_all(  # check if "wirtualny opiekun" is in description
+                        "h2", "elementor-heading-title elementor-size-default"
+                    )
+                )
+                if virtual_patron:  # if yes, remove it
+                    return 1
+                return i
+
+    def find_last_modified_date(self, animal_date):
+        """
+        Returns date of last modification of animal's page,
+        compares date of publication and date of last modification,
+        if date of publication is older, date of last modification is returned,
+        if not, date of publication is returned
+
+
+        Args:
+            animal_date (json): json with date of publication and date of last modification
+
+        Returns:
+            datetime: date of last modification of animal's page, in datetime format
+        """
+        animal_date = animal_date["@graph"][2]
+
+        if datetime.strptime(  # if date of publication is older than date of last modification
+            animal_date["datePublished"][:10],
+            "%Y-%m-%d",  # [:10] because of time in date
+        ) < datetime.strptime(
+            animal_date["dateModified"][:10], "%Y-%m-%d"
+        ):  # set date of publication to date of last modification
+            last_modified_date = datetime.strptime(
+                animal_date["dateModified"][:10], "%Y-%m-%d"
+            ).date()
+        else:
+            last_modified_date = datetime.strptime(
+                animal_date["datePublished"][:10],
+                "%Y-%m-%d",  # else set date of publication to date of publication
+            ).date()
+        return last_modified_date
+
     def parse_animal_details(self):
+        """
+        Parses animal's details from link_content, returns list of details
+
+        Returns:
+            list: list of animal's details
+            list: list of animal's details names
+            list: list of animal's pictures
+            datetime: date of last modification of animal's page, in datetime format
+        """
         soup = BeautifulSoup(self.link_content, "lxml")
         parameter = soup.find_all(
             "div", "jet-listing-dynamic-field__content"
@@ -97,7 +227,7 @@ class AnimalOtoz(Animal):
         parameter_name = soup.find_all(
             "span", "elementor-icon-list-text"
         )  # get all dog's details names
-        desc = self.find_description(soup.find_all("span", "raven-heading-title"))
+        desc = self.find_description_place(soup.find_all("span", "raven-heading-title"))
         if desc:
             parameter.pop(
                 1
@@ -109,40 +239,12 @@ class AnimalOtoz(Animal):
 
         return parameter, parameter_name, pictures, publication_date
 
-    def find_description(self, list_of_site_elements):
-        for i, element in enumerate(list_of_site_elements):
-            if element.text == "Opis":
-                soup = BeautifulSoup(self.link_content, "lxml")
-                pictures = (
-                    soup.find_all(  # check if "wirtualny opiekun" is in description
-                        "h2", "elementor-heading-title elementor-size-default"
-                    )
-                )
-                if pictures:  # if yes, remove it
-                    return 1
-                return i
-
-    def find_last_modified_date(self, date_object):
-
-        if datetime.strptime(  # if date of publication is older than date of last modification
-            date_object["@graph"][2]["datePublished"][:10],
-            "%Y-%m-%d",  # [:10] because of time in date
-        ) < datetime.strptime(
-            date_object["@graph"][2]["dateModified"][:10], "%Y-%m-%d"
-        ):  # set date of publication to date of last modification
-            publication_date = datetime.strptime(
-                date_object["@graph"][2]["dateModified"][:10], "%Y-%m-%d"
-            ).date()
-        else:
-            publication_date = datetime.strptime(
-                date_object["@graph"][2]["datePublished"][:10],
-                "%Y-%m-%d",  # else set date of publication to date of publication
-            ).date()
-        return publication_date
-
     def set_animal_details(
         self,
-    ):  # wziac podstawowe parametry i przypisac im default value
+    ):
+        """
+        Sets animal's details, checks if animal's name and description are not empty,
+        """
         details = self.parse_animal_details()
         dict_details = {
             "Imie": details[0][0].text,

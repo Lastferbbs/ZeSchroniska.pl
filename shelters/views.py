@@ -14,6 +14,8 @@ from django.views.generic import (
     TemplateView,
 )
 
+from django.forms import ModelForm
+
 from .filters import AnimalFilter
 from .api import API_KEY
 
@@ -27,6 +29,16 @@ link = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins=placeh
 
 class HomePageView(TemplateView):
     template_name = "shelters/home.html"
+
+
+# class ContactPageForm(ModelForm):
+#     class Meta:
+#         model = Animal
+#         fields = ["name", "age", "breed
+
+
+class ContactPageView(TemplateView):
+    template_name = "shelters/contact.html"
 
 
 class AnimalDetailView(DetailView):
