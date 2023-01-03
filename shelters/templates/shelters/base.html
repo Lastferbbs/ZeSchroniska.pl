@@ -15,19 +15,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet">
-
+    <link rel="shortcut icon" href="{% static 'shelters/favicon.png' %}" />
     <title> Przygarnij zwierzaka!</title>
     <style>
         body {
             font-family: 'Lato', sans-serif;
         }
     </style>
+
 </head>
 
 <!-- NAVBAR -->
 
 <body style="background-color: #212529">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black" style="background-color:rgb(20, 20, 20) ">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black " style="background-color:rgb(20, 20, 20) ">
         <div class="container-fluid">
             <a class="navbar-brand" href="/home">Strona główna</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -38,39 +40,15 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/home">Home</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/dogs">Psiaki</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/cats">Koty</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/dogs"> Psy </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        <a class="nav-link active" href="/dogs"> O nas/Kontakt </a>
                     </li>
                 </ul>
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
             </div>
         </div>
     </nav>
@@ -87,11 +65,12 @@
 <footer class="text-muted py-5" style="background-color: rgb(20, 20, 20);">
     <div class="container">
         <p class="float-end mb-1">
-            <a href="#">Back to top</a>
+            <a href="#">Powrót na górę</a>
         </p>
-        <p class="mb-1">Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-        <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a
-                href="../getting-started/introduction/">getting started guide</a>.</p>
+        <p class="mb-1" href="https://github.com/Lastferbbs/">Agregator ogłoszeń utworzony przez
+            https://github.com/Lastferbbs/</p>
+        <p class="mb-0">Zeschroniska.pl &copy; 2022</p>
+        <a href="https://github.com/Lastferbbs/ZeSchroniska.pl">GitHub</a>
     </div>
 </footer>
 

@@ -1,5 +1,4 @@
 from django.db import models
-from .consts import SIZE_CHOICES
 
 # Create your models here.
 
@@ -25,7 +24,7 @@ class Animal(models.Model):
     description = models.CharField(max_length=5000)
     pictures = models.CharField(max_length=2000)
     shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE)
-    publication_date = models.DateField(max_length=200, choices=SIZE_CHOICES)
+    publication_date = models.DateField(max_length=200)
     size = models.CharField(max_length=200)
     link = models.CharField(max_length=200)
     animal_type = models.CharField(max_length=200)
