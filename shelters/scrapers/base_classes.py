@@ -211,6 +211,7 @@ class Animal:  # dodac klase Dog z konkretnego schroniska, ktora dziedziczy po k
 
     def set_age(self, age):
         self.age = age
+        self.set_age_in_months()
 
     def set_breed(self, breed):
         self.breed = breed

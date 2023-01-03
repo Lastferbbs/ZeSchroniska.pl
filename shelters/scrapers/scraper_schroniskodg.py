@@ -157,7 +157,7 @@ class AnimalDG(Animal):
         pictures = soup.find("div", "project_content with_sidebar")
         pictures = pictures.find_all("img")
         for picture in pictures:
-            if "ares" in picture.attrs["src"]:
+            if "ares" in picture.attrs["src"] or self.name in picture.attrs["alt"]:
                 self.add_picture(picture.attrs["src"])
 
 
@@ -166,10 +166,10 @@ class AnimalDG(Animal):
 #     # print(shelter.get_availables_pages_for_animal("dogs"))
 #     # print(shelter.get_all_dogs_from_website())
 #     # for dog in shelter.get_all_dogs_from_website():
-shelter = SchroniskoDG()
-dog = AnimalDG("https://schroniskodg.pl/zwierzak/misiu/", "pies", shelter)
-shelter.get_availables_pages_for_animal("cats")
-# shelter.add_dog(dog)
+# shelter = SchroniskoDG()
+# dog = AnimalDG("https://schroniskodg.pl/zwierzak/oska/", "kot", shelter)
+# # shelter.get_availables_pages_for_animal("cats")
+# # shelter.add_dog(dog)
 # dog.download_animal_link_content()
 # dog.set_animal_details()
 # dog.set_animal_pictures()
