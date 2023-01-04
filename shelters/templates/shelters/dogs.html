@@ -74,14 +74,15 @@
                     <a href=/{{dog.animal_type}}s/{{dog.pk}}>
                         <div class=" card-img-overlay">
 
-                            <h3 class=" card-title align-self-end text-white strokeme">{{ dog.name }} - {{dog.sex}}</h3>
+                            <h3 class=" card-title align-self-end text-white strokeme">{{dog.name}} - {{dog.sex}}</h3>
 
                             <p class="card-text text-white align-self-end strokeme fs-4">{{dog.size}} /
-                                {{dog.age}} - {{dogs.shelter}}</p>
-
+                                {{dog.age}}</p>
+                            <!-- - {{dog.shelter.city}} -->
                         </div>
                     </a>
-                    <p class="card-text text-white bg-dark bg-gradient">Data publikacji: {{dog.publication_date}}</p>
+                    <p class="card-text text-white bg-dark bg-gradient">Data publikacji:
+                        {{dog.publication_date|date:"d-m-Y"}}</p>
                 </div>
             </div>
             {% endfor %}

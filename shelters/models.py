@@ -43,3 +43,6 @@ class Animal(models.Model):
 
     def first_picture(self):
         return self.pictures.split(",")[0]
+
+    def pictures_list(self):
+        return self.pictures.split(",")

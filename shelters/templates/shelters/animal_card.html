@@ -7,8 +7,36 @@
 
 <div class="container-fluid">
     <div class="row justify-content-center text-white">
-        <div class="col-12 col-md-12 col-lg-6 mb-4 mt-5  justify-content-center" style="max-width: 90%;">
-            <img src={{animal.first_picture}} class="rounded " alt="...">
+        <div class="col-12 col-md-12 col-lg-6  mb-4 mt-5  justify-content-center mx-auto" style="max-width: 100%;">
+            <!-- <img src={{animal.first_picture}} class="rounded " alt="..."> -->
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-interval="false" data-bs-ride="true">
+
+                <div class="carousel-indicators">
+                    {% for picture in animal.pictures_list %}
+                    <button type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter == 1 %}active{% endif %}"
+                        aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for picture in animal.pictures_list %}
+                    <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+                        <img src="{{picture}}" class="d-block h-75 w-100 " alt="..."
+                            data-mdb-img="https://mdbcdn.b-cdn.net/img/Photos/Slides/1.webp">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
         </div>
         <div class="col-12 col-md-12 col-lg-6 mb-4 mt-5">
             <h1 class="fs-1" style="text-align:left">{{animal.name}} </h1>
@@ -24,7 +52,7 @@
             <p class="fs-5" style="text-align:left; padding-left: 5%;">Data opublikowania:
                 {{animal.publication_date|date:"d-m-Y"}}
             </p>
-            <p class="fs-5" style="text-align:left; padding-left: 5%;">W schronisku w mieście:
+            <p class="fs-5" style="text-align:left; padding-left: 5%;">W mieście:
                 {{animal.shelter.city}} </p>
             <a class="fs-5" href="{{animal.link}}" style="text-align:left; padding-left: 5%;">Link:
                 {{animal.link}} </a>

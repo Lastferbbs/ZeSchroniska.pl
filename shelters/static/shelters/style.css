@@ -53,3 +53,10 @@ footer {
     min-height: 50px;
     background: PapayaWhip;
 }
+
+
+
+.carousel-indicators {
+    top: -30px;
+
+}
