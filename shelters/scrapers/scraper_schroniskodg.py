@@ -147,9 +147,12 @@ class AnimalDG(Animal):
                     ):
                         description_details_parameters_setter[param]("samica")
                 else:  # taking other details which are on slot 0
-                    description_details_parameters_setter[param](
-                        parameter.contents[1].contents[0].text
-                    )
+                    try:
+                        description_details_parameters_setter[param](
+                            parameter.contents[1].contents[0].text
+                        )
+                    except IndexError:
+                        continue
         self.set_age_in_months()
 
     def set_animal_pictures(self):

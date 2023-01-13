@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import django
+from datetime import datetime
 
 import sys
 
@@ -53,9 +54,15 @@ def adding_new_animals_to_db():
     If animal from the database is not on the website, it is marked as inactive.
     """
 
-    listings_in_db = set()
-    for dog in Animal.objects.all():
-        listings_in_db.add(dog.link)
+    # listings_in_db = set()
+    # for dog in Animal.objects.all():
+    #     listings_in_db.add(dog.link)
+
+    new_total_dogs = 0
+    new_total_cats = 0
+    total_desactivated_dogs = 0
+    total_desactivated_cats = 0
+    print(django_directory)
 
     for shelter, animal_class in shelters.items():
         listings_in_db_dogs = set()
@@ -63,9 +70,13 @@ def adding_new_animals_to_db():
 
         if Shelter.objects.filter(name=shelter.name).exists():
             shel = Shelter.objects.get(name=shelter.name)
-            for dog in Animal.objects.filter(shelter=shel, animal_type="dog"):
-                listings_in_db.add(dog.link)
-            for cat in Animal.objects.filter(shelter=shel, animal_type="cat"):
+            for dog in Animal.objects.filter(
+                shelter=shel, animal_type="dog", valid=True
+            ):
+                listings_in_db_dogs.add(dog.link)
+            for cat in Animal.objects.filter(
+                shelter=shel, animal_type="cat", valid=True
+            ):
                 listings_in_db_cats.add(cat.link)
         else:
             shel = Shelter(
@@ -80,12 +91,17 @@ def adding_new_animals_to_db():
             shel.save()
 
         dogs_from_website = shelter.get_all_dogs_from_website()
-        not_active_dogs = listings_in_db - dogs_from_website
-        new_dogs = dogs_from_website - listings_in_db
+        not_active_dogs = listings_in_db_dogs - dogs_from_website
+        new_dogs = dogs_from_website - listings_in_db_dogs
 
         cats_from_website = shelter.get_all_cats_from_website()
-        not_active_cats = listings_in_db - cats_from_website
-        new_cats = cats_from_website - listings_in_db
+        not_active_cats = listings_in_db_cats - cats_from_website
+        new_cats = cats_from_website - listings_in_db_cats
+
+        new_total_dogs += len(new_dogs)
+        new_total_cats += len(new_cats)
+        total_desactivated_dogs += len(not_active_dogs)
+        total_desactivated_cats += len(not_active_cats)
 
         for dog in new_dogs:
             dog = animal_class(dog, "dog", shelter)
@@ -141,7 +157,25 @@ def adding_new_animals_to_db():
             ani.valid = False
             ani.save()
 
+    return (
+        new_total_dogs,
+        new_total_cats,
+        total_desactivated_dogs,
+        total_desactivated_cats,
+    )
 
+
+if __name__ == "__main__":
+    (
+        new_total_dogs,
+        new_total_cats,
+        total_desactivated_dogs,
+        total_desactivated_cats,
+    ) = adding_new_animals_to_db()
+    with open(django_directory + "/shelters/logs/log.txt", "a+") as f:
+        f.write(
+            f"{datetime.now()} - Dodano {new_total_dogs} psów i {new_total_cats} kotów. Dezaktywowano {total_desactivated_dogs} psów i {total_desactivated_cats} kotów."
+        )
 # for dog in Animal.objects.all():
 #     listings_in_db.add(dog.link)
 
