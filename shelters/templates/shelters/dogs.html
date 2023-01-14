@@ -94,15 +94,17 @@
 
 <!--Pagination-->
 <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center pt-3">
+    <ul class="pagination justify-content-center">
         {% if dogs_json.has_previous %}
         <li class="page-item">
             <a class="page-link"
-                href="?page={{ dogs_json.previous_page_number }}{{ current_filters}}{{ excluded_cities}}">Poprzednia</a>
+                href="?page={{ dogs_json.previous_page_number }}{{ current_filters}}{{ excluded_cities}}">
+                < </a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Poprzednia</a>
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">
+                < </a>
         </li>
         {% endif %}
 
@@ -134,11 +136,11 @@
             {% if dogs_json.has_next %}
             <li class="page-item">
                 <a class="page-link"
-                    href="?page={{ dogs_json.next_page_number }}{{ current_filters}}{{ excluded_cities}}">Następna</a>
+                    href="?page={{ dogs_json.next_page_number }}{{ current_filters}}{{ excluded_cities}}">></a>
             </li>
             {% else %}
             <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Następna</a>
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">></a>
             </li>
             {% endif %}
     </ul>
