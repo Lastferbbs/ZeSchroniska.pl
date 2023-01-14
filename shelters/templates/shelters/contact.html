@@ -3,11 +3,26 @@
 
 <div class="container" style="max-width:600px">
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center text-white">
-        <h1 class="display-4">All Books</h1>
-        <p class="lead">A range of wonderful programming books to help you learn JavaScript.</p>
+        <h1 class="display-4">Kontakt</h1>
+        <p class="lead">Jeśli masz jakiekolwiek pytania, użyj poniższego formularza, żeby się z nami skontaktować.</p>
     </div>
-    <div class="py-5">
+    <div>
         <div class="row">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <p></p>
+
+
+                <div class="alert alert-info justify-content-center text-center" role="alert">
+                    {{message}}
+                </div>
+
+
+
+                {% endfor %}
+            </ul>
+            {% endif %}
             <div class="col-12 text-white">
                 <form method="post" action=".">
 
@@ -16,25 +31,12 @@
 
                     {{ form.as_p }}
 
-                    <input type="submit">
+                    <input type="submit" class="btn btn-sm btn-primary" value="Wyślij">
 
                 </form>
-                {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                    <p></p>
 
-
-                    <div class="alert alert-info justify-content-center text-center" role="alert">
-                        {{message}}
-                    </div>
-
-
-
-                    {% endfor %}
-                </ul>
-                {% endif %}
             </div>
+
         </div>
     </div>
 </div>
