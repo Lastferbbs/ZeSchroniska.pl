@@ -28,7 +28,7 @@ class SchroniskoDG(Schronisko):
         name="schroniskodg",
         address="Dłużyna Górna 1F, 59-930 Pieńsk",
         city="Dłużyna Górna",
-        phone="+48 (75) 778 04 12 ",
+        phone="+48 (75) 778 04 12",
         email="schroniskodluzyna@gmail.com",
         website="https://schroniskodg.pl/",
         link_dogs="https://schroniskodg.pl/zw-kat/psy-do-adopcji/page/",

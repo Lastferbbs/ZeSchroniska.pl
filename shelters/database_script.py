@@ -62,7 +62,6 @@ def adding_new_animals_to_db():
     new_total_cats = 0
     total_desactivated_dogs = 0
     total_desactivated_cats = 0
-    print(django_directory)
 
     for shelter, animal_class in shelters.items():
         listings_in_db_dogs = set()

@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from .views import HomePageView, AnimalDetailView
+from .views import HomePageView, AnimalDetailView, SheltersPageView
 
 from . import views
 
@@ -13,4 +13,5 @@ urlpatterns = [
     path("cats/", views.cats, name="shelters/cats"),
     path("cats/<int:pk>/", AnimalDetailView.as_view()),
     path("contact/", views.ContactPageView.as_view()),
+    path("shelters/", views.SheltersPageView.as_view()),
 ]

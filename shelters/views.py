@@ -8,13 +8,14 @@ from django.core import serializers
 from django.core.paginator import (
     Paginator,
 )
-from django.views.generic import (
-    ListView,
-    DetailView,
-    TemplateView,
-)
+from django.contrib import messages
+from django.views.generic import ListView, DetailView, TemplateView, FormView
 
+from django.core.mail import send_mail
 from django.forms import ModelForm
+from django.template.loader import render_to_string
+
+from .forms import ContactPageForm
 
 from .filters import AnimalFilter
 from .api import API_KEY
@@ -31,14 +32,27 @@ class HomePageView(TemplateView):
     template_name = "shelters/home.html"
 
 
+class SheltersPageView(TemplateView):
+    template_name = "shelters/schroniska.html"
+
+
 # class ContactPageForm(ModelForm):
 #     class Meta:
 #         model = Animal
 #         fields = ["name", "age", "breed
 
 
-class ContactPageView(TemplateView):
+class ContactPageView(FormView):
     template_name = "shelters/contact.html"
+    form_class = ContactPageForm
+    success_url = "/contact/"
+    redirect = "/contact/"
+    form = ContactPageForm()
+
+    def form_valid(self, form):
+        form.send_email()
+        messages.success(self.request, "Wiadomość została wysłana")
+        return super().form_valid(form)
 
 
 class AnimalDetailView(DetailView):
