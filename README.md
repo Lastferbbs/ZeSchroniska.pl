@@ -8,7 +8,9 @@ Simple website which aggregate animals adoption listings from shelters in Poland
 
 Currently focusing on:
 
-- [ ] creating "O stronie" subpage
-- [ ] creating "Kontakt" subpage
-- [ ] creating "Schroniska" subpage
-- [ ] animal subpage visual update
+- [x] creating "O stronie" subpage
+- [x] creating "Kontakt" subpage
+- [x] creating "Schroniska" subpage
+- [x] animal subpage visual update
+- [ ] adding share options for animal
+- [ ] getting data from at least 10 shelters (4 currently)
