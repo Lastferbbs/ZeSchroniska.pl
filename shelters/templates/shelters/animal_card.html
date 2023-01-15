@@ -6,7 +6,7 @@
 
 
 <div class="container-fluid">
-    <div class="row justify-content-center text-white">
+    <div class="row justify-content-center text-white" style="max-height: 100%">
         <div class="col-12 col-md-12 col-lg-6  mb-4 mt-5  justify-content-center mx-auto" style="max-width: 100%;">
             <!-- <img src={{animal.first_picture}} class="rounded " alt="..."> -->
             <div id="carouselExampleIndicators" class="carousel slide" data-bs-interval="false" data-bs-ride="true">
@@ -38,27 +38,77 @@
                 </button>
             </div>
         </div>
-        <div class="col-12 col-md-12 col-lg-6 mb-4 mt-5">
+        <div class="col-12 col-md-12 col-lg-6 mb-4 mt-5 px-5">
             <h1 class="fs-1" style="text-align:left">{{animal.name}} </h1>
-            <h2 class="fs-2" style="text-align:left">Opis </h2>
-            <p class="fs-5" style="text-align:left; overflow: auto;">{{animal.description}} </p>
+
             <h1 class="fs-1" style="text-align:left"></h1>
             <h2 class="fs-2" style="text-align:left">Informacje </h2>
-            <p class="fs-5" style="text-align:left; padding-left: 5%;">Wiek: {{animal.age}} </p>
-            <p class="fs-5" style="text-align:left; padding-left: 5%;">Płeć: {{animal.sex}} </p>
-            <p class="fs-5" style="text-align:left; padding-left: 5%;">Rasa: {{animal.breed}} </p>
-            <p class="fs-5" style="text-align:left; padding-left: 5%;">Wielkość: {{animal.size}} </p>
-            <p class="fs-5" style="text-align:left; padding-left: 5%;">Wysterlizowany: {{animal.sterilized}} </p>
-            <p class="fs-5" style="text-align:left; padding-left: 5%;">Data opublikowania:
-                {{animal.publication_date|date:"d-m-Y"}}
+            <p></p>
+            <div class="row row-cols-auto border py-3 mb-3">
+                <div class="col-md-4">
+                    <p class="fs-5" style="text-align:left; padding-left: 5%;">Wiek: {{animal.age}} </p>
+                    <p class="fs-5" style="text-align:left; padding-left: 5%;">Płeć: {{animal.sex}} </p>
+                    <p class="fs-5" style="text-align:left; padding-left: 5%;">Rasa: {{animal.breed}} </p>
+                </div>
+                <div class="col-md-4">
+                    <p class="fs-5" style="text-align:left; padding-left: 5%;">Wielkość: {{animal.size}} </p>
+                    <p class="fs-5" style="text-align:left; padding-left: 5%;">Wysterlizowany: {{animal.sterilized}}
+                    </p>
+
+
+                </div>
+                <div class="col-md-4">
+                    <p class="fs-5" style="text-align:left; padding-left: 5%;">Data opublikowania:
+                        {{animal.publication_date|date:"d-m-Y"}}
+                    </p>
+                    <p class="fs-5" style="text-align:left; padding-left: 5%;">W mieście:
+                        {{animal.shelter.city}} </p>
+                    <a class="fs-5" href="{{animal.link}}" style="text-align:left; padding-left: 5%;">Do strony
+                        schroniska</a>
+                </div>
+            </div>
+
+            <h2 class="fs-2 d-none d-sm-block" style="text-align:left">Opis </h2>
+            <p class="fs-5 d-none d-sm-block" style="text-align: justify; overflow: auto;">{{animal.description}} </p>
+
+
+            <p>
+                <button class="btn btn-primary d-block d-sm-none" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Pokaż/schowaj opis
+                </button>
             </p>
-            <p class="fs-5" style="text-align:left; padding-left: 5%;">W mieście:
-                {{animal.shelter.city}} </p>
-            <a class="fs-5" href="{{animal.link}}" style="text-align:left; padding-left: 5%;">Link</a>
+            <div class="collapse" id="collapseExample">
+                <div class="fs-5" style="text-align: left; overflow: auto;">
+                    {{animal.description}}
+                </div>
+            </div>
+
+
+
+
+
 
 
         </div>
     </div>
 </div>
+
+
+
+<!-- <div class="container">
+
+    <button class="btn btn-primary hidden visible-xs" type="button" data-bs-toggle="collapse"
+        data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Collapse Button
+    </button>
+
+    <div class="collapse dont-collapse-sm" id="collapseExample">
+        <div class="card card-body">
+            Collapse Panel
+        </div>
+    </div>
+</div> -->
+
 
 {% endblock %}
