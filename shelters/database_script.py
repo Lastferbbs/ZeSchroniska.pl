@@ -16,6 +16,7 @@ from shelters.models import Animal, Shelter
 import shelters.scrapers.scaper_otozschroniskozg as otoz
 import shelters.scrapers.scraper_schroniskodg as schroniskodg
 import shelters.scrapers.scraper_schroniskowroclaw as schroniskowroclaw
+import shelters.scrapers.scraper_schroniskokroto as schroniskokroto
 
 # shelters = [
 #     {schroniskodg.SchroniskoDG():,
@@ -26,6 +27,7 @@ shelters = {
     otoz.OtozSchroniskoZg(): otoz.AnimalOtoz,
     schroniskodg.SchroniskoDG(): schroniskodg.AnimalDG,
     schroniskowroclaw.SchroniskoWro(): schroniskowroclaw.AnimalWro,
+    schroniskokroto.SchroniskoKroto(): schroniskokroto.AnimalKroto,
 }
 # TODO: zebrać wszystkie klasy schronisk w jednym pliku, załadować je,
 # wywołać funkcję get_all_dogs_from_website() i porównać z bazą danych

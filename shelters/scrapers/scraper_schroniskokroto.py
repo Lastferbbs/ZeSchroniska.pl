@@ -95,7 +95,7 @@ class SchroniskoKroto(Schronisko):
         return animal_list
 
 
-class AnimalKrotoszyn(Animal):
+class AnimalKroto(Animal):
     def __init__(
         self,
         link,
@@ -119,18 +119,28 @@ class AnimalKrotoszyn(Animal):
         if self.animal_type == "dog":
             description = content[3].text
             description = description.replace("\n", "").replace("\r", " ")
-            sterilization = content[4].contents[1].contents[3][1:]
-            self.set_sterilized(sterilization)
+            try:
+                sterilization = content[4].contents[1].contents[3][1:]
+                self.set_sterilized(sterilization)
+            except IndexError:
+                pass
+
         else:
             description = content[2].text
             description = description.replace("\n", "").replace("\r", " ")
 
-        print(name, sex, age, description)
-        # TODO: nie dziala, date trzeba poprawic:
+        # print(name, sex, age, description)
+        # TODO: nie dziala, date trzeba poprawic
+        # TODO: dawać bardziej jasne todo, na ten moment nie wiem co trzeba poprawić
         if len(content[0].contents[1].contents) > 8:
-            date = datetime.strptime(
-                content[0].contents[1].contents[2].text[-10:], "%d.%m.%Y"
-            ).date()
+            try:
+                date = datetime.strptime(
+                    content[0].contents[1].contents[2].text[-10:], "%d.%m.%Y"
+                ).date()
+            except ValueError:
+                date = datetime.strptime(
+                    content[0].contents[1].contents[3].text[-10:], "%d.%m.%Y"
+                ).date()
         else:
             date = datetime.strptime(
                 content[0].contents[1].contents[1][-10:], "%d.%m.%Y"
@@ -185,15 +195,15 @@ class AnimalKrotoszyn(Animal):
 # # # print(shelter.get_availables_pages_for_animal("cats"))
 # # # print(shelter.get_all_dogs_from_website())
 # # # print(shelter.get_all_cats_from_website())
-shelter = SchroniskoKroto()
-# print(shelter.get_all_dogs_from_website())
-# TODO: przetestowac pobieranie kotow
-print(shelter.get_all_cats_from_website())
+# shelter = SchroniskoKroto()
+# # print(shelter.get_all_dogs_from_website())
+# # TODO: przetestowac pobieranie kotow
+# print(shelter.get_all_cats_from_website())
 
 
-psiak = AnimalKrotoszyn("https://krotoszyn.eadopcje.org/kot/116", "kot", shelter)
-psiak.download_animal_link_content()
-psiak.set_animal_details()
-psiak.set_animal_pictures()
+# psiak = AnimalKroto("https://krotoszyn.eadopcje.org/kot/116", "kot", shelter)
+# psiak.download_animal_link_content()
+# psiak.set_animal_details()
+# psiak.set_animal_pictures()
 # psiak.set_animal_pictures()
 # psiak.print_animal_details()
