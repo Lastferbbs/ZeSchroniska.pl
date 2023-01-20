@@ -19,8 +19,8 @@ sys.path.append("/home/bsc-node/sol_exp/Zeschroniska.pl/zeschroniska")
 from shelters.scrapers.base_classes import Animal, Schronisko
 from shelters.scrapers.headers import headers
 
-# TODO - brak podstrony dla zwierzaka, jakoś to spróbować obejść
-class SchroniskoWro(Schronisko):
+
+class SchroniskoKroto(Schronisko):
     def __init__(
         self,
         name="schroniskokrotoszyn",
@@ -36,13 +36,20 @@ class SchroniskoWro(Schronisko):
             self, name, address, phone, email, website, link_dogs, link_cats, city
         )
 
+    def get_animals_content(self, page, type_animal):
+        if type_animal == "dogs":
+            website = requests.get(self.link_dogs + page, headers=headers)
+            return website.content
+
+        elif type_animal == "cats":
+            website = requests.get(self.link_cats + page, headers=headers)
+            return website.content
+
     def get_dogs_content(self, page):
-        website = requests.get(self.link_dogs + page, headers=headers)
-        return website.content
+        return self.get_animals_content(page, "dogs")
 
     def get_cats_content(self, page):
-        website = requests.get(self.link_cats + page, headers=headers)
-        return website.content
+        return self.get_animals_content(page, "cats")
 
     def get_availables_pages_for_animal(self, type_animal):
         if type_animal == "dogs":
@@ -65,35 +72,27 @@ class SchroniskoWro(Schronisko):
         return max_page_numbers
 
     def get_all_dogs_from_website(self):
-        dogs_list = set()
+        return self.get_all_animals_from_website("dogs", "psiak/")
 
-        if int(self.get_availables_pages_for_animal("dogs")) > 0:
-            for page in range(
-                1, int(self.get_availables_pages_for_animal("dogs")) + 1
-            ):  # iterate over all pages
-                soup = BeautifulSoup(
-                    self.get_dogs_content(str((page - 1) * 10)), "lxml"
-                )
-                dogs_listings = soup.find_all("a", href=re.compile("psiak/"))
-                for dog in dogs_listings[::2]:
-                    dogs_list.add("https://krotoszyn.eadopcje.org/" + dog.attrs["href"])
-        return dogs_list
-
-    # TODO: kod jest bardzo podobny do get_all_dogs_from_website, scalic to w jedna funkcje
     def get_all_cats_from_website(self):
-        cats_list = set()
+        return self.get_all_animals_from_website("cats", "kot/")
 
-        if int(self.get_availables_pages_for_animal("cats")) > 0:
-            for page in range(
-                1, int(self.get_availables_pages_for_animal("cats")) + 1
-            ):  # iterate over all pages
+    def get_all_animals_from_website(self, type_animal, regex_animal):
+        animal_list = set()
+        pages_number = self.get_availables_pages_for_animal(type_animal)
+        if int(pages_number) > 0:
+            for page in range(1, int(pages_number) + 1):  # iterate over all pages
                 soup = BeautifulSoup(
-                    self.get_cats_content(str((page - 1) * 10)), "lxml"
+                    self.get_animals_content(str((page - 1) * 10), type_animal),
+                    "lxml",
                 )
-                cats_listings = soup.find_all("a", href=re.compile("kot/"))
-                for cat in cats_listings[::2]:
-                    cats_list.add("https://krotoszyn.eadopcje.org/" + cat.attrs["href"])
-        return cats_list
+
+                animal_listings = soup.find_all("a", href=re.compile(regex_animal))
+                for animal in animal_listings[::2]:
+                    animal_list.add(
+                        "https://krotoszyn.eadopcje.org/" + animal.attrs["href"]
+                    )
+        return animal_list
 
 
 class AnimalKrotoszyn(Animal):
@@ -186,10 +185,10 @@ class AnimalKrotoszyn(Animal):
 # # # print(shelter.get_availables_pages_for_animal("cats"))
 # # # print(shelter.get_all_dogs_from_website())
 # # # print(shelter.get_all_cats_from_website())
-shelter = SchroniskoWro()
+shelter = SchroniskoKroto()
 # print(shelter.get_all_dogs_from_website())
 # TODO: przetestowac pobieranie kotow
-# print(shelter.get_all_cats_from_website())
+print(shelter.get_all_cats_from_website())
 
 
 psiak = AnimalKrotoszyn("https://krotoszyn.eadopcje.org/kot/116", "kot", shelter)
